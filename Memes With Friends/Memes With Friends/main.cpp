@@ -1,5 +1,10 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_physfs.h>
+#include <physfs.h>
+#include "Card.h"
 
 const float FPS = 60;
 const int SCREEN_W = 1920;
@@ -42,9 +47,38 @@ int main(int argc, char **argv)
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 
+	if (!al_init_primitives_addon()) {
+		fprintf(stderr, "failed to initialize primitives addon!\n");
+		al_destroy_display(display);
+		al_destroy_timer(timer);
+		return -1;
+	}
+
+	if (!al_init_image_addon()) {
+		fprintf(stderr, "failed to initialize image addon!\n");
+		al_destroy_display(display);
+		al_destroy_timer(timer);
+		return -1;
+	}
+
+	PHYSFS_init(NULL);
+	if (!PHYSFS_mount("assets.zip", "/", 1)) {
+		fprintf(stderr, "failed to open assets.zip file!\n");
+		PHYSFS_deinit();
+		al_shutdown_primitives_addon();
+		al_shutdown_image_addon();
+		al_destroy_display(display);
+		al_destroy_timer(timer);
+	}
+
+	al_set_physfs_file_interface();
+
 	event_queue = al_create_event_queue();
 	if (!event_queue) {
 		fprintf(stderr, "failed to create event_queue!\n");
+		PHYSFS_deinit();
+		al_shutdown_primitives_addon();
+		al_shutdown_image_addon();
 		al_destroy_display(display);
 		al_destroy_timer(timer);
 		return -1;
@@ -61,6 +95,10 @@ int main(int argc, char **argv)
 	al_flip_display();
 
 	al_start_timer(timer);
+
+	Card *test_card = new Card();
+	test_card->set_color(al_map_rgb(255, 0, 0));
+	test_card->set_pos(50, 50);
 
 	while (!doexit)
 	{
@@ -81,9 +119,14 @@ int main(int argc, char **argv)
 
 		al_clear_to_color(BACKGROUND_COLOR);
 
+		test_card->draw();
+
 		al_flip_display();
 	}
 
+	PHYSFS_deinit();
+	al_shutdown_primitives_addon();
+	al_shutdown_image_addon();
 	al_destroy_timer(timer);
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
