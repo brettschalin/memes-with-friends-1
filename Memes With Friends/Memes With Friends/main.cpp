@@ -5,15 +5,12 @@
 #include <allegro5/allegro_physfs.h>
 #include <physfs.h>
 #include "Card.h"
+#include "GameDisplay.h"
 
 const float FPS = 60;
-const int SCREEN_W = 1920;
-const int SCREEN_H = 1080;
-ALLEGRO_COLOR BACKGROUND_COLOR; // set after allegro is initialized
 
 int main(int argc, char **argv)
 {
-	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	bool doexit = false;
@@ -22,8 +19,6 @@ int main(int argc, char **argv)
 		fprintf(stderr, "failed to initialize allegro!\n");
 		return -1;
 	}
-
-	BACKGROUND_COLOR = al_map_rgb(241, 241, 212);
 
 	if (!al_install_keyboard()) {
 		fprintf(stderr, "failed to initialize the keyboard!\n");
@@ -36,27 +31,22 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	al_set_new_display_flags(ALLEGRO_WINDOWED);
+	GameDisplay *gamedisplay = new GameDisplay();
 
-	display = al_create_display(SCREEN_W, SCREEN_H);
-	if (!display) {
+	if (!gamedisplay->valid_display()) {
 		fprintf(stderr, "failed to create display!\n");
 		al_destroy_timer(timer);
 		return -1;
 	}
 
-	al_set_target_bitmap(al_get_backbuffer(display));
-
 	if (!al_init_primitives_addon()) {
 		fprintf(stderr, "failed to initialize primitives addon!\n");
-		al_destroy_display(display);
 		al_destroy_timer(timer);
 		return -1;
 	}
 
 	if (!al_init_image_addon()) {
 		fprintf(stderr, "failed to initialize image addon!\n");
-		al_destroy_display(display);
 		al_destroy_timer(timer);
 		return -1;
 	}
@@ -67,7 +57,6 @@ int main(int argc, char **argv)
 		PHYSFS_deinit();
 		al_shutdown_primitives_addon();
 		al_shutdown_image_addon();
-		al_destroy_display(display);
 		al_destroy_timer(timer);
 	}
 
@@ -79,21 +68,18 @@ int main(int argc, char **argv)
 		PHYSFS_deinit();
 		al_shutdown_primitives_addon();
 		al_shutdown_image_addon();
-		al_destroy_display(display);
 		al_destroy_timer(timer);
 		return -1;
 	}
 
-	al_register_event_source(event_queue, al_get_display_event_source(display));
+	al_register_event_source(event_queue, al_get_display_event_source(gamedisplay->get_display()));
 
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
-	al_clear_to_color(BACKGROUND_COLOR);
-
-	al_flip_display();
-
+	gamedisplay->set_background_color(al_map_rgb(241, 241, 212));
+	
 	al_start_timer(timer);
 
 	Card *test_card = new Card();
@@ -117,7 +103,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		al_clear_to_color(BACKGROUND_COLOR);
+		gamedisplay->clear_display();
 
 		test_card->draw();
 
@@ -128,7 +114,6 @@ int main(int argc, char **argv)
 	al_shutdown_primitives_addon();
 	al_shutdown_image_addon();
 	al_destroy_timer(timer);
-	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
 
 	return 0;
