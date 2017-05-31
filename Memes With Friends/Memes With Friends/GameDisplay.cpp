@@ -22,6 +22,13 @@ GameDisplay::GameDisplay()
 	float sx = windowWidth / (float)screenWidth;
 	float sy = windowHeight / (float)screenHeight;
 
+	if ((sx < (float)0.0) || (sy < (float)0.0)) {
+		this->fontsize = 16;
+	}
+	else {
+		this->fontsize = 12;
+	}
+
 	ALLEGRO_TRANSFORM trans;
 	al_identity_transform(&trans);
 	al_scale_transform(&trans, sx, sy);
@@ -37,6 +44,11 @@ bool GameDisplay::valid_display()
 {
 	if (this->display) return true;
 	return false;
+}
+
+int GameDisplay::get_font_size()
+{
+	return this->fontsize;
 }
 
 ALLEGRO_DISPLAY * GameDisplay::get_display()

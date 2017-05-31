@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
 	al_set_physfs_file_interface();
 
-	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", 12, 0);
+	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay->get_font_size(), 0);
 	if (!font) {
 		fprintf(stderr, "failed to load pirulen.ttf from assets.zip!\n");
 		PHYSFS_deinit();
