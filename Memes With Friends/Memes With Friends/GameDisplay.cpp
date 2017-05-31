@@ -2,16 +2,20 @@
 #include <algorithm>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
+#include <tuple>
 
 GameDisplay::GameDisplay()
 {
 	al_get_display_mode(al_get_num_display_modes() - 1, &this->disp_data);
 
 	al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
-	display = al_create_display(this->disp_data.width, this->disp_data.height);
+	al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
+	al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
-	int windowWidth = al_get_display_width(display);
-	int windowHeight = al_get_display_height(display);
+	this->display = al_create_display(this->disp_data.width, this->disp_data.height);
+
+	int windowWidth = al_get_display_width(this->display);
+	int windowHeight = al_get_display_height(this->display);
 	int screenWidth = this->SCREEN_W;
 	int screenHeight = this->SCREEN_H;
 
@@ -53,4 +57,27 @@ ALLEGRO_COLOR GameDisplay::get_background_color()
 void GameDisplay::clear_display()
 {
 	al_clear_to_color(this->BACKGROUND_COLOR);
+}
+
+std::tuple<int, int> GameDisplay::convert_coordinates(int x, int y)
+{
+	int windowWidth = al_get_display_width(this->display);
+	int windowHeight = al_get_display_height(this->display);
+	int screenWidth = this->SCREEN_W;
+	int screenHeight = this->SCREEN_H;
+
+	float sx = windowWidth / (float)screenWidth;
+	float sy = windowHeight / (float)screenHeight;
+
+	// HIGHER RESOLUTION
+	// sx = 3840(S) / 1920(W) = 2
+	// x = 3840(S) / 2(sx) = 1920
+	// x = 1920(S) / 2(sx) = 960
+
+	// LOWER RESOLUTION
+	// sx = 1024(S) / 1920(W) = 0.533333333333333333
+	// x = 1024(S) / 0.533333333333333333(sx) = 1920
+	// x = 512(S) / 0.533333333333333333(sx) = 960
+
+	return std::make_tuple(x / sx, y / sy);
 }

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <allegro5/allegro.h>
+#include <tuple>
 
 class GameDisplay
 {
@@ -19,5 +20,6 @@ public:
 	void set_background_color(ALLEGRO_COLOR color);
 	ALLEGRO_COLOR get_background_color();
 	void clear_display();
+	std::tuple<int, int> convert_coordinates(int x, int y);
 };
 
