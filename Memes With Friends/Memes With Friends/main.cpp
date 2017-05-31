@@ -134,9 +134,6 @@ int main(int argc, char **argv)
 			mouse_x = ev.mouse.x;
 			mouse_y = ev.mouse.y;
 		}
-		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
-			break;
-		}
 		else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
 			switch (ev.keyboard.keycode) {
 			case ALLEGRO_KEY_D:
