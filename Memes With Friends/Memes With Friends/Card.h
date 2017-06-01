@@ -29,12 +29,12 @@ public:
 	const static int CARD_BORDER_WIDTH = 5;
 	Card();
 	~Card();
-	const void draw();
-	const void set_pos(int x1, int y1);
-	const void set_color(ALLEGRO_COLOR color);
-	const void set_font(ALLEGRO_FONT *font);
-	const void set_gamedisplay(GameDisplay *gamedisplay);
-	const void Card::choose_meme(std::vector<const char *>& meme_list);
+	void draw();
+	void set_pos(int x1, int y1);
+	void set_color(ALLEGRO_COLOR color);
+	void set_font(ALLEGRO_FONT *font);
+	void set_gamedisplay(GameDisplay *gamedisplay);
+	void choose_meme(std::vector<const char *>& meme_list);
 	std::vector<const char *> list_memes(ALLEGRO_FS_ENTRY *dir);
 	int get_up();
 	int get_down();

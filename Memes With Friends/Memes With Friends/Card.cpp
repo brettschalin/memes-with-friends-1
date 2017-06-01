@@ -37,7 +37,7 @@ Card::~Card()
 }
 
 /* Wrote this when I was tired to try to prevent issues where a bad image or non image gets put in the memes directory. Not sure if works but seems to so far. */
-const void Card::choose_meme(std::vector<const char *>& meme_list) {
+void Card::choose_meme(std::vector<const char *>& meme_list) {
 	fprintf(stdout, "Shuffling meme_list...\n");
 	std::random_shuffle(meme_list.begin(), meme_list.end());
 
@@ -84,7 +84,7 @@ std::vector<const char *> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
 	return memes;
 }
 
-const void Card::draw()
+void Card::draw()
 {
 	if (!this->meme_image) return;
 
@@ -111,7 +111,7 @@ const void Card::draw()
 	al_draw_text(font, al_map_rgb(0, 0, 0), this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2), this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) - 10, ALLEGRO_ALIGN_LEFT, std::to_string(down).c_str());
 }
 
-const void Card::set_pos(int x1, int y1)
+void Card::set_pos(int x1, int y1)
 {
 	this->x1 = x1;
 	this->y1 = y1;
@@ -119,17 +119,17 @@ const void Card::set_pos(int x1, int y1)
 	this->y2 = y1 + Card::CARD_H;
 }
 
-const void Card::set_color(ALLEGRO_COLOR color)
+void Card::set_color(ALLEGRO_COLOR color)
 {
 	this->CARD_COLOR = color;
 }
 
-const void Card::set_font(ALLEGRO_FONT *font)
+void Card::set_font(ALLEGRO_FONT *font)
 {
 	this->font = font;
 }
 
-const void Card::set_gamedisplay(GameDisplay *gamedisplay)
+void Card::set_gamedisplay(GameDisplay *gamedisplay)
 {
 	this->gamedisplay = gamedisplay;
 }
