@@ -5,21 +5,25 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_physfs.h>
+#include <vector>
+#include <random>
+#include <algorithm>
 #include <string>
 
 Card::Card()
 {
 	srand((int)time(0));
-	int r = (rand() % 2) + 1;
 
-	switch (r) {
-	case 1:
-		this->meme_image = al_load_bitmap("picard-facepalm.jpg");
-		break;
-	case 2:
-		this->meme_image = al_load_bitmap("pepe.jpg");
-		break;
-	}
+	fprintf(stdout, "Initializing new card...\n");
+	ALLEGRO_FS_ENTRY *dir = al_create_fs_entry("memes");
+	std::vector<const char *> meme_list = this->list_memes(dir);
+
+	fprintf(stdout, "Listing meme list contents...\n");
+	for (std::vector<const char *>::const_iterator i = meme_list.begin(); i != meme_list.end(); ++i)
+		fprintf(stdout, "%s\n", *i);
+
+	this->choose_meme(meme_list);
 
 	this->up = (rand() % 9) + 1;
 	this->down = (rand() % 9) + 1;
@@ -27,14 +31,63 @@ Card::Card()
 	this->right = (rand() % 9) + 1;
 }
 
-
 Card::~Card()
 {
 	al_destroy_bitmap(this->meme_image);
 }
 
+/* Wrote this when I was tired to try to prevent issues where a bad image or non image gets put in the memes directory. Not sure if works but seems to so far. */
+const void Card::choose_meme(std::vector<const char *>& meme_list) {
+	fprintf(stdout, "Shuffling meme_list...\n");
+	std::random_shuffle(meme_list.begin(), meme_list.end());
+
+	fprintf(stdout, "Trying meme '%s'...\n", meme_list.front());
+	this->meme_image = al_load_bitmap(meme_list.front());
+
+	if (!this->meme_image) {
+		fprintf(stdout, "Meme '%s' failed to load...\n", meme_list.front());
+
+		this->choose_meme(meme_list);
+	}
+	else {
+		fprintf(stdout, "Chose meme '%s'...\n", meme_list.front());
+		return;
+	}
+}
+
+std::vector<const char *> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
+{
+	std::vector<const char *> memes;
+
+	ALLEGRO_FS_ENTRY *file;
+
+	al_open_directory(dir);
+	while (1) {
+		file = al_read_directory(dir);
+		if (!file) {
+			fprintf(stdout, "Invalid file/directory or no more files left. Breaking...\n");
+			break;
+		}
+		if (al_get_fs_entry_mode(file) & ALLEGRO_FILEMODE_ISDIR) {
+			fprintf(stdout, "Skipping directory\n");
+			continue;
+		}
+
+		fprintf(stdout, "Assigning '%s' to memes list\n", al_get_fs_entry_name(file));
+
+		char *filename = _strdup(al_get_fs_entry_name(file));
+		memes.push_back(filename);
+		al_destroy_fs_entry(file);
+	}
+	al_close_directory(dir);
+
+	return memes;
+}
+
 const void Card::draw()
 {
+	if (!this->meme_image) return;
+
 	// Draw the meme image first at the appropriate location
 	al_draw_scaled_bitmap(this->meme_image, 0, 0, al_get_bitmap_width(this->meme_image), al_get_bitmap_height(this->meme_image), this->x1, this->y1, Card::CARD_W, Card::CARD_H, 0);
 
