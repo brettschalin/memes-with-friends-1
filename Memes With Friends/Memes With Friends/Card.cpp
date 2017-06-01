@@ -17,11 +17,11 @@ Card::Card()
 
 	fprintf(stdout, "Initializing new card...\n");
 	ALLEGRO_FS_ENTRY *dir = al_create_fs_entry("memes");
-	std::vector<const char *> meme_list = this->list_memes(dir);
+	std::vector<std::string> meme_list = this->list_memes(dir);
 
 	fprintf(stdout, "Listing meme list contents...\n");
-	for (std::vector<const char *>::const_iterator i = meme_list.begin(); i != meme_list.end(); ++i)
-		fprintf(stdout, "%s\n", *i);
+	for (std::vector<std::string>::const_iterator i = meme_list.begin(); i != meme_list.end(); ++i)
+		fprintf(stdout, "%s\n", i->c_str());
 
 	this->choose_meme(meme_list);
 
@@ -37,27 +37,27 @@ Card::~Card()
 }
 
 /* Wrote this when I was tired to try to prevent issues where a bad image or non image gets put in the memes directory. Not sure if works but seems to so far. */
-void Card::choose_meme(std::vector<const char *>& meme_list) {
+void Card::choose_meme(std::vector<std::string>& meme_list) {
 	fprintf(stdout, "Shuffling meme_list...\n");
 	std::random_shuffle(meme_list.begin(), meme_list.end());
 
-	fprintf(stdout, "Trying meme '%s'...\n", meme_list.front());
-	this->meme_image = al_load_bitmap(meme_list.front());
+	fprintf(stdout, "Trying meme '%s'...\n", meme_list.front().c_str());
+	this->meme_image = al_load_bitmap(meme_list.front().c_str());
 
 	if (!this->meme_image) {
-		fprintf(stdout, "Meme '%s' failed to load...\n", meme_list.front());
+		fprintf(stdout, "Meme '%s' failed to load...\n", meme_list.front().c_str());
 
 		this->choose_meme(meme_list);
 	}
 	else {
-		fprintf(stdout, "Chose meme '%s'...\n", meme_list.front());
+		fprintf(stdout, "Chose meme '%s'...\n", meme_list.front().c_str());
 		return;
 	}
 }
 
-std::vector<const char *> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
+std::vector<std::string> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
 {
-	std::vector<const char *> memes;
+	std::vector<std::string> memes;
 
 	ALLEGRO_FS_ENTRY *file;
 
@@ -75,8 +75,7 @@ std::vector<const char *> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
 
 		fprintf(stdout, "Assigning '%s' to memes list\n", al_get_fs_entry_name(file));
 
-		char *filename = _strdup(al_get_fs_entry_name(file));
-		memes.push_back(filename);
+		memes.push_back(al_get_fs_entry_name(file));
 		al_destroy_fs_entry(file);
 	}
 	al_close_directory(dir);

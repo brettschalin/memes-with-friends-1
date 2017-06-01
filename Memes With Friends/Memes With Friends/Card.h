@@ -34,8 +34,8 @@ public:
 	void set_color(ALLEGRO_COLOR color);
 	void set_font(ALLEGRO_FONT *font);
 	void set_gamedisplay(GameDisplay *gamedisplay);
-	void choose_meme(std::vector<const char *>& meme_list);
-	std::vector<const char *> list_memes(ALLEGRO_FS_ENTRY *dir);
+	void choose_meme(std::vector<std::string>& meme_list);
+	std::vector<std::string> list_memes(ALLEGRO_FS_ENTRY *dir);
 	int get_up();
 	int get_down();
 	int get_left();
