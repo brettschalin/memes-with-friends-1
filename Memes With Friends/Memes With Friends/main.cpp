@@ -111,8 +111,17 @@ int main(int argc, char **argv)
 	al_start_timer(timer);
 
 	Card *test_card = new Card();
+	test_card->set_font(font);
+	test_card->set_gamedisplay(gamedisplay);
 	test_card->set_color(al_map_rgb(255, 0, 0));
 	test_card->set_pos(50, 50);
+
+	/* Test card 2 is only for number testing at this time and is not displayed on screen. Will be removed shortly */
+	Card *test_card2 = new Card();
+	test_card2->set_font(font);
+	test_card2->set_gamedisplay(gamedisplay);
+	test_card2->set_color(al_map_rgb(255, 0, 0));
+	test_card2->set_pos(50, 50);
 
 	int mouse_x, mouse_y = 0;
 	int sx, sy = 0;
@@ -156,10 +165,10 @@ int main(int argc, char **argv)
 			if (debug) {
 				// if debug is toggled on, draw debug information above everything else
 				std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
-				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx);
-				std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy);
+				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(test_card2) ? "True" : "False");
+				std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
 				std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
-				al_draw_multiline_text(font, al_map_rgb(0, 0, 0), 10, 10, 500, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
+				al_draw_multiline_text(font, al_map_rgb(0, 0, 0), 10, 10, 700, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
 			}
 
 			// draw help text
