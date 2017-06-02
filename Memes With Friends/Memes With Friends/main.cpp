@@ -9,6 +9,9 @@
 #include <string>
 #include "Card.h"
 #include "GameDisplay.h"
+#include "PlayerHand.h"
+#include "Player1Hand.h"
+#include "Player2Hand.h"
 
 const float FPS = 60;
 
@@ -110,13 +113,17 @@ int main(void)
 	
 	al_start_timer(timer);
 
+	Player1Hand *p1hand = new Player1Hand(font, gamedisplay);
+	Player2Hand *p2hand = new Player2Hand(font, gamedisplay);
+
+	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
+
 	Card *test_card = new Card();
 	test_card->set_font(font);
 	test_card->set_gamedisplay(gamedisplay);
 	test_card->set_color(al_map_rgb(255, 0, 0));
 	test_card->set_pos(50, 50);
 
-	/* Test card 2 is only for number testing at this time and is not displayed on screen. Will be removed shortly */
 	Card *test_card2 = new Card();
 	test_card2->set_font(font);
 	test_card2->set_gamedisplay(gamedisplay);
@@ -160,7 +167,8 @@ int main(void)
 
 			gamedisplay->clear_display();
 
-			test_card->draw();
+			p1hand->draw();
+			p2hand->draw();
 
 			if (debug) {
 				// if debug is toggled on, draw debug information above everything else

@@ -7,8 +7,6 @@
 class GameDisplay
 {
 private:
-	const int SCREEN_W = 1920;
-	const int SCREEN_H = 1080;
 	int fontsize = 12;
 	ALLEGRO_COLOR BACKGROUND_COLOR;
 	ALLEGRO_DISPLAY_MODE disp_data;
@@ -23,5 +21,7 @@ public:
 	ALLEGRO_COLOR get_background_color();
 	void clear_display();
 	std::tuple<int, int> convert_coordinates(int x, int y);
+	const static int SCREEN_W = 1920;
+	const static int SCREEN_H = 1080;
 };
 

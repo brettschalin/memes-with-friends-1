@@ -130,10 +130,16 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameDisplay.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player1Hand.cpp" />
+    <ClCompile Include="Player2Hand.cpp" />
+    <ClCompile Include="PlayerHand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
     <ClInclude Include="GameDisplay.h" />
+    <ClInclude Include="Player1Hand.h" />
+    <ClInclude Include="Player2Hand.h" />
+    <ClInclude Include="PlayerHand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

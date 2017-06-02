@@ -13,7 +13,10 @@
 
 Card::Card()
 {
-	srand((int)time(0));
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_real_distribution<> dist(1, 10000);
+	srand(dist(mt));
 
 	fprintf(stdout, "Initializing new card...\n");
 	ALLEGRO_FS_ENTRY *dir = al_create_fs_entry("memes");
