@@ -12,7 +12,7 @@
 
 const float FPS = 60;
 
-int main(int argc, char **argv)
+int main(void)
 {
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
