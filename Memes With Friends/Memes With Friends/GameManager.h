@@ -8,6 +8,7 @@
 struct gameData
 {
 	int currentPlayer; //zero based
+	ALLEGRO_COLOR* colors[2];
 	Card* playerCards[2][HANDSIZE];
 	Card* board[BOARDSIZE][BOARDSIZE];
 
@@ -25,6 +26,6 @@ public:
 	void setCurrentPlayer(int player);
 	void playCard(int player, int x, int y);
 	Card* getCard(int x, int y); //Get the card at the speficied board position
-
+	bool in_bounds(int x, int y);
 
 };

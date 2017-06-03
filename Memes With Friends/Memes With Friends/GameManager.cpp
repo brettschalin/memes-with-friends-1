@@ -2,6 +2,14 @@
 
 GameManager::GameManager()
 {
+
+	//Set colors. Player 1 is red, Player 2 is blue
+	ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
+	ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
+	data->colors[0] = &red;
+	data->colors[1] = &blue;
+
+
 	//Assign who's first to play
 	int currPlayer = (rand() % 2);
 	setCurrentPlayer(currPlayer);
@@ -63,20 +71,62 @@ void GameManager::setCurrentPlayer(int player)
 
 void GameManager::playCard(int player, int x, int y)
 {
-	//complicated
-	//and in progress
 
-	/*
-	The general strategy here is to do the calculations
-	and let the main game loop handle animations.
-	We will assume that the move is legal
-	>first, remove the Card() from the active player's hand
-	 and put it on the board
-	>then determine which Card()s flip colors
-	
-	
-	*/
+	Card* current = getCard(x, y);
 
+	bool switch_color = false;
+
+	for (int dx = -1; dx < 2; dx++)
+	{
+		for (int dy = -1; dy < 2; dy++)
+		{
+			if (!in_bounds(x + dx, y + dy)) continue;
+
+			Card* other = getCard(x + dx, y + dy);
+			if (other == NULL) continue;
+
+			if (dx == -1 && dy == 0)
+			{
+				if ((*current).compare_to_left(other))
+				{
+					switch_color = true;
+				}
+			}
+			if (dx == 1 && dy == 0)
+			{
+				if ((*current).compare_to_right(other))
+				{
+					switch_color = true;
+				}
+			}
+			if (dx == 0 && dy == 1)
+			{
+				if ((*current).compare_to_up(other))
+				{
+					switch_color = true;
+				}
+			}
+
+			if (dx == 0 && dy == -1)
+			{
+				if ((*current).compare_to_down(other))
+				{
+					switch_color = true;
+				}
+			}
+			if(switch_color)
+			{
+				(*other).set_color(*data->colors[player]);
+				switch_color = false;
+			}
+		}
+	}
+
+}
+
+bool GameManager::in_bounds(int x, int y)
+{
+	return x >= 0 && x < BOARDSIZE && y >= 0 && y < BOARDSIZE;
 }
 
 

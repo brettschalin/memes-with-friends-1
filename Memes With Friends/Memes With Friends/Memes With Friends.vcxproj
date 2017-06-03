@@ -83,6 +83,13 @@
     <Allegro_AddonTTF>true</Allegro_AddonTTF>
     <Allegro_AddonFont>true</Allegro_AddonFont>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Allegro_AddonImage>true</Allegro_AddonImage>
+    <Allegro_AddonTTF>true</Allegro_AddonTTF>
+    <Allegro_AddonPrimitives>true</Allegro_AddonPrimitives>
+    <Allegro_AddonPhysfs>true</Allegro_AddonPhysfs>
+    <Allegro_AddonFont>true</Allegro_AddonFont>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -130,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameDisplay.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player1Hand.cpp" />
     <ClCompile Include="Player2Hand.cpp" />
@@ -138,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Card.h" />
     <ClInclude Include="GameDisplay.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player1Hand.h" />
     <ClInclude Include="Player2Hand.h" />
     <ClInclude Include="PlayerHand.h" />
