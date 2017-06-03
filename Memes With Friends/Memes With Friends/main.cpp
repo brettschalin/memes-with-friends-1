@@ -14,6 +14,8 @@
 #include "Player1Hand.h"
 #include "Player2Hand.h"
 
+#define ASSETS_PATH "assets.zip"
+
 const float FPS = 60;
 
 int main(void)
@@ -74,8 +76,8 @@ int main(void)
 	}
 
 	PHYSFS_init(NULL);
-	if (!PHYSFS_mount("assets.zip", "/", 1)) {
-		std::cerr << "failed to open assets.zip file!" << std::endl;
+	if (!PHYSFS_mount(ASSETS_PATH, "/", 1)) {
+		std::cerr << "failed to open " << ASSETS_PATH << " file!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();
@@ -85,7 +87,7 @@ int main(void)
 
 	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay->get_font_size(), 0);
 	if (!font) {
-		std::cerr << "failed to load pirulen.ttf from assets.zip!" << std::endl;
+		std::cerr << "failed to load pirulen.ttf from " << ASSETS_PATH << "!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();

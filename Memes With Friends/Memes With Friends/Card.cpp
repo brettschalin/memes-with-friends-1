@@ -49,7 +49,7 @@ void Card::choose_meme(std::vector<std::string>& meme_list) {
 	this->meme_image = al_load_bitmap(meme_list.front().c_str());
 
 	if (!this->meme_image) {
-		std::cout << "Meme '" << meme_list.front() << "'" << std::endl;
+		std::cout << "Meme '" << meme_list.front() << "' failed to load" << std::endl;
 
 		this->choose_meme(meme_list);
 	}
