@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Makefile" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
