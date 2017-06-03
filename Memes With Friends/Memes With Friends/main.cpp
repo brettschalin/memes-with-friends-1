@@ -7,6 +7,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <physfs.h>
 #include <string>
+#include <iostream>
 #include "Card.h"
 #include "GameDisplay.h"
 #include "PlayerHand.h"
@@ -23,7 +24,7 @@ int main(void)
 	bool debug = false;
 
 	if (!al_init()) {
-		fprintf(stderr, "failed to initialize allegro!\n");
+		std::cerr << "failed to initialize allegro!" << std::endl;
 		return -1;
 	}
 
@@ -31,20 +32,20 @@ int main(void)
 	al_init_ttf_addon();
 
 	if (!al_install_keyboard()) {
-		fprintf(stderr, "failed to initialize the keyboard!\n");
+		std::cerr << "failed to initialize the keyboard!" << std::endl;
 		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_install_mouse()) {
-		fprintf(stderr, "failed to initialize the mouse!\n");
+		std::cerr << "failed to initialize the mouse!" << std::endl;
 		al_uninstall_system();
 		return -1;
 	}
 
 	timer = al_create_timer(1.0 / FPS);
 	if (!timer) {
-		fprintf(stderr, "failed to create timer!\n");
+		std::cerr << "failed to create timer!" << std::endl;
 		al_uninstall_system();
 		return -1;
 	}
@@ -52,21 +53,21 @@ int main(void)
 	GameDisplay *gamedisplay = new GameDisplay();
 
 	if (!gamedisplay->valid_display()) {
-		fprintf(stderr, "failed to create display!\n");
+		std::cerr << "failed to create display!" << std::endl;
 		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_primitives_addon()) {
-		fprintf(stderr, "failed to initialize primitives addon!\n");
+		std::cerr << "failed to initialize primitives addon!" << std::endl;
 		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_image_addon()) {
-		fprintf(stderr, "failed to initialize image addon!\n");
+		std::cerr << "failed to initialize image addon!" << std::endl;
 		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
@@ -74,7 +75,7 @@ int main(void)
 
 	PHYSFS_init(NULL);
 	if (!PHYSFS_mount("assets.zip", "/", 1)) {
-		fprintf(stderr, "failed to open assets.zip file!\n");
+		std::cerr << "failed to open assets.zip file!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();
@@ -84,7 +85,7 @@ int main(void)
 
 	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay->get_font_size(), 0);
 	if (!font) {
-		fprintf(stderr, "failed to load pirulen.ttf from assets.zip!\n");
+		std::cerr << "failed to load pirulen.ttf from assets.zip!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();
@@ -93,7 +94,7 @@ int main(void)
 
 	event_queue = al_create_event_queue();
 	if (!event_queue) {
-		fprintf(stderr, "failed to create event_queue!\n");
+		std::cerr << "failed to create event_queue!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_destroy_font(font);
