@@ -9,6 +9,10 @@ GameManager::GameManager()
 	data->colors[0] = &red;
 	data->colors[1] = &blue;
 
+	//Set initial scores
+	data->scores = new int[2];
+	data->scores[0] = HANDSIZE;
+	data->scores[1] = HANDSIZE;
 
 	//Assign who's first to play
 	int currPlayer = (rand() % 2);
@@ -54,8 +58,11 @@ GameManager::~GameManager()
 		}
 	}
 
+	//These throw warnings about using the wrong form of delete.
+	//Would gladly appreciate corrections.
 	delete data->playerCards;
 	delete data->board;
+	delete data->scores;
 	delete data;
 }
 
@@ -69,10 +76,13 @@ void GameManager::setCurrentPlayer(int player)
 	data->currentPlayer = player;
 }
 
-void GameManager::playCard(int player, int x, int y)
-{
 
-	Card* current = getCard(x, y);
+//Only implements the game logic. Anything with animations or display is left to other functions
+//Assumes that a valid move is played
+void GameManager::playCard(Card* card, int x, int y)
+{
+	
+	*data->board[x, y] = card;
 
 	bool switch_color = false;
 
@@ -87,21 +97,21 @@ void GameManager::playCard(int player, int x, int y)
 
 			if (dx == -1 && dy == 0)
 			{
-				if ((*current).compare_to_left(other))
+				if ((*card).compare_to_left(other))
 				{
 					switch_color = true;
 				}
 			}
 			if (dx == 1 && dy == 0)
 			{
-				if ((*current).compare_to_right(other))
+				if ((*card).compare_to_right(other))
 				{
 					switch_color = true;
 				}
 			}
 			if (dx == 0 && dy == 1)
 			{
-				if ((*current).compare_to_up(other))
+				if ((*card).compare_to_up(other))
 				{
 					switch_color = true;
 				}
@@ -109,18 +119,23 @@ void GameManager::playCard(int player, int x, int y)
 
 			if (dx == 0 && dy == -1)
 			{
-				if ((*current).compare_to_down(other))
+				if ((*card).compare_to_down(other))
 				{
 					switch_color = true;
 				}
 			}
 			if(switch_color)
 			{
-				(*other).set_color(*data->colors[player]);
+				(*other).set_color(*data->colors[data->currentPlayer]);
 				switch_color = false;
+				
+				data->scores[data->currentPlayer]++;
+				data->scores[!(data->currentPlayer)]--;
+
 			}
 		}
 	}
+	
 
 }
 
@@ -135,4 +150,24 @@ Card* GameManager::getCard(int x, int y)
 
 	return data->board[x][y];
 
+}
+
+//Removes a card from the hand and returns it.
+Card* GameManager::drawCardFromHand(int index)
+{
+	int curr = data->currentPlayer;
+	Card* out = data->playerCards[curr][index];
+	data->playerCards[curr][index] = NULL;
+	for (int i = index + 1; i < HANDSIZE; i++)
+	{
+		data->playerCards[curr][i - 1] = data->playerCards[curr][i];
+	}
+	data->playerCards[curr][HANDSIZE - 1] = NULL;
+	return out;
+
+}
+
+int GameManager::getScore(int player)
+{
+	return data->scores[player];
 }

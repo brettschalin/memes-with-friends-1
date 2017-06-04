@@ -11,6 +11,7 @@ struct gameData
 	ALLEGRO_COLOR* colors[2];
 	Card* playerCards[2][HANDSIZE];
 	Card* board[BOARDSIZE][BOARDSIZE];
+	int* scores;
 
 };
 
@@ -24,8 +25,11 @@ public:
 	~GameManager();
 	int getCurrentPlayer();
 	void setCurrentPlayer(int player);
-	void playCard(int player, int x, int y);
-	Card* getCard(int x, int y); //Get the card at the speficied board position
+	void playCard(Card* card, int x, int y);
+	Card* getCard(int x, int y);
+	Card* drawCardFromHand(int index);
 	bool in_bounds(int x, int y);
+	int getScore(int player);
+
 
 };

@@ -13,6 +13,7 @@
 #include "PlayerHand.h"
 #include "Player1Hand.h"
 #include "Player2Hand.h"
+#include "GameManager.h"
 
 const float FPS = 60;
 
@@ -133,6 +134,32 @@ int main(void)
 
 	int mouse_x, mouse_y = 0;
 	int sx, sy = 0;
+
+	//Testing and example usage for the GameManager class
+	GameManager game = GameManager();
+	int currentPlayer = game.getCurrentPlayer();
+	game.playCard(game.drawCardFromHand(3), 0, 0);
+	int testdown = (*game.getCard(0, 0)).get_down();
+	game.setCurrentPlayer(!currentPlayer);
+	game.playCard(game.drawCardFromHand(2), 0, 1);
+	int testup = (*game.getCard(0, 1)).get_up();
+	if (!((testdown > testup) == (*game.getCard(0,0)).compare_to_down(game.getCard(0, 1))))
+	{
+		std::cout << "Either card comparions or card placement is broken." << std::endl;
+	}
+
+	int player1Score = game.getScore(0);
+	int player2Score = game.getScore(1);
+	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
+
+	delete &game;
+
+
+
+
+
+
+
 
 	bool redraw = true;
 
