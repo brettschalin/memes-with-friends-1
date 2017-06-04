@@ -4,8 +4,9 @@
 #include <vector>
 #include "Card.h"
 #include "GameDisplay.h"
+#include "CardFactory.h"
 
-PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y)
+PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory)
 {
 	this->font = font;
 	this->color = color;
@@ -16,7 +17,7 @@ PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COL
 	int card_width = (Card::CARD_BORDER_WIDTH * 2) + Card::CARD_W;
 	for (i = 0; i < 5; i++) {
 		real_x = this->x + (i * (card_width + 10));
-		Card *card = new Card();
+		Card *card = card_factory->create_card();
 		card->set_font(font);
 		card->set_gamedisplay(gamedisplay);
 		card->set_color(this->color);

@@ -27,15 +27,13 @@ public:
 	const static int CARD_W = 166;
 	const static int CARD_H = 266;
 	const static int CARD_BORDER_WIDTH = 5;
-	Card();
+	Card(std::string meme, std::vector<int> numbers);
 	~Card();
 	void draw();
 	void set_pos(int x1, int y1);
 	void set_color(ALLEGRO_COLOR color);
 	void set_font(ALLEGRO_FONT *font);
 	void set_gamedisplay(GameDisplay *gamedisplay);
-	void choose_meme(std::vector<std::string>& meme_list);
-	std::vector<std::string> list_memes(ALLEGRO_FS_ENTRY *dir);
 	int get_up();
 	int get_down();
 	int get_left();
