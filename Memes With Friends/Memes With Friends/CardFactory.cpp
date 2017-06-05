@@ -18,6 +18,7 @@ CardFactory::CardFactory()
 	std::cout << "Searching for memes..." << std::endl;
 	ALLEGRO_FS_ENTRY *dir = al_create_fs_entry("memes");
 	this->populate_memes(dir);
+	al_destroy_fs_entry(dir);
 
 	std::cout << "Listing meme list contents..." << std::endl;
 
