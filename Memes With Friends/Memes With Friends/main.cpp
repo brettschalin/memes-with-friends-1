@@ -58,9 +58,9 @@ int main(void)
 		return -1;
 	}
 
-	GameDisplay *gamedisplay = new GameDisplay();
+	GameDisplay gamedisplay = GameDisplay();
 
-	if (!gamedisplay->valid_display()) {
+	if (!gamedisplay.valid_display()) {
 		std::cerr << "failed to create display!" << std::endl;
 		al_destroy_timer(timer);
 		al_uninstall_system();
@@ -109,7 +109,7 @@ int main(void)
 
 	al_set_physfs_file_interface();
 
-	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay->get_font_size(), 0);
+	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay.get_font_size(), 0);
 	if (!font) {
 		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
@@ -128,7 +128,7 @@ int main(void)
 		return -1;
 	}
 
-	al_register_event_source(event_queue, al_get_display_event_source(gamedisplay->get_display()));
+	al_register_event_source(event_queue, al_get_display_event_source(gamedisplay.get_display()));
 
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
@@ -136,26 +136,26 @@ int main(void)
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 
-	gamedisplay->set_background_color(al_map_rgb(241, 241, 212));
+	gamedisplay.set_background_color(al_map_rgb(241, 241, 212));
 	
 	al_start_timer(timer);
 
-	CardFactory *card_factory = new CardFactory();
+	CardFactory card_factory = CardFactory();
 
-	Player1Hand *p1hand = new Player1Hand(font, gamedisplay, card_factory);
-	Player2Hand *p2hand = new Player2Hand(font, gamedisplay, card_factory);
+	Player1Hand p1hand = Player1Hand(font, &gamedisplay, &card_factory);
+	Player2Hand p2hand = Player2Hand(font, &gamedisplay, &card_factory);
 
 	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
 
-	Card *test_card = card_factory->create_card();
+	Card *test_card = card_factory.create_card();
 	test_card->set_font(font);
-	test_card->set_gamedisplay(gamedisplay);
+	test_card->set_gamedisplay(&gamedisplay);
 	test_card->set_color(al_map_rgb(255, 0, 0));
 	test_card->set_pos(50, 50);
 
-	Card *test_card2 = card_factory->create_card();
+	Card *test_card2 = card_factory.create_card();
 	test_card2->set_font(font);
-	test_card2->set_gamedisplay(gamedisplay);
+	test_card2->set_gamedisplay(&gamedisplay);
 	test_card2->set_color(al_map_rgb(255, 0, 0));
 	test_card2->set_pos(50, 50);
 
@@ -194,14 +194,14 @@ int main(void)
 
 			redraw = false;
 
-			gamedisplay->clear_display();
+			gamedisplay.clear_display();
 
-			p1hand->draw();
-			p2hand->draw();
+			p1hand.draw();
+			p2hand.draw();
 
 			if (debug) {
 				// if debug is toggled on, draw debug information above everything else
-				std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
+				std::tie(sx, sy) = gamedisplay.convert_coordinates(mouse_x, mouse_y);
 				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(test_card2) ? "True" : "False");
 				std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
 				std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
