@@ -6,8 +6,8 @@ GameManager::GameManager()
 	//Set colors. Player 1 is red, Player 2 is blue
 	ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
 	ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
-	data->colors[0] = &red;
-	data->colors[1] = &blue;
+	data->colors.push_back(red);
+	data->colors.push_back(blue);
 
 	//Set initial scores
 	data->scores = new int[2];
@@ -126,7 +126,7 @@ void GameManager::playCard(Card* card, int x, int y)
 			}
 			if(switch_color)
 			{
-				(*other).set_color(*data->colors[data->currentPlayer]);
+				(*other).set_color(data->colors[data->currentPlayer]);
 				switch_color = false;
 				
 				data->scores[data->currentPlayer]++;

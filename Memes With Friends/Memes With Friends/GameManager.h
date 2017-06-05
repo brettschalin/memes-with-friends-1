@@ -8,7 +8,7 @@
 struct gameData
 {
 	int currentPlayer; //zero based
-	ALLEGRO_COLOR* colors[2];
+	std::vector<ALLEGRO_COLOR> colors;
 	Card* playerCards[2][HANDSIZE];
 	Card* board[BOARDSIZE][BOARDSIZE];
 	int* scores;
