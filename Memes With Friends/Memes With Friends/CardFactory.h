@@ -23,5 +23,5 @@ public:
 	~CardFactory();
 	void populate_memes(ALLEGRO_FS_ENTRY *dir);
 	Card *create_card();
-	std::string CardFactory::choose_meme();
+	std::string choose_meme();
 };

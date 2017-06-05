@@ -77,7 +77,6 @@ Card *CardFactory::create_card()
 	return card;
 }
 
-/* Wrote this when I was tired to try to prevent issues where a bad image or non image gets put in the memes directory. Not sure if works but seems to so far. */
 std::string CardFactory::choose_meme() {
 	ALLEGRO_BITMAP *temp;
 
@@ -88,8 +87,8 @@ std::string CardFactory::choose_meme() {
 	temp = al_load_bitmap(meme_names.front().c_str());
 
 	if (!temp) {
-		std::cout << "Meme '" << meme_names.front() << "'" << std::endl;
-		this->choose_meme();
+		std::cout << "Meme '" << meme_names.front() << "' unable to load. Trying to find another one..." << std::endl;
+		return this->choose_meme();
 	}
 	else {
 		std::cout << "Chose meme '" << meme_names.front() << "'" << std::endl;
