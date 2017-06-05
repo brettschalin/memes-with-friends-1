@@ -6,6 +6,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <physfs.h>
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <iostream>
 #include "Card.h"
@@ -14,7 +16,9 @@
 #include "Player1Hand.h"
 #include "Player2Hand.h"
 
-#define ASSETS_PATH "assets.zip"
+#ifndef DATADIR
+#define DATADIR "./"
+#endif
 
 const float FPS = 60;
 
@@ -29,7 +33,7 @@ int main(void)
 		std::cerr << "failed to initialize allegro!" << std::endl;
 		return -1;
 	}
-
+	
 	al_init_font_addon();
 	al_init_ttf_addon();
 
@@ -75,9 +79,27 @@ int main(void)
 		return -1;
 	}
 
+	// std::string from NULL char * is undefined behavior and causes crashing
+	// to resolve, we will try to grab the environment variable into datadir_raw
+	// if it's NULL or blank, initialize with contents of DATADIR
+	char *datadir_raw = std::getenv("MWF_DATADIR");
+	if (datadir_raw == NULL || std::strlen(datadir_raw) == 0) {
+		datadir_raw = DATADIR;
+	}
+
+	// then make a std::string out of datadir_raw
+	std::string datadir(datadir_raw);
+
+	// attempt to open assets.zip file at datadir's location
+	// if it fails to load, mount the directory instead
+	std::ifstream infile(datadir + "/assets.zip");
+	if (infile.good()) {
+		datadir += "/assets.zip";
+	}
+
 	PHYSFS_init(NULL);
-	if (!PHYSFS_mount(ASSETS_PATH, "/", 1)) {
-		std::cerr << "failed to open " << ASSETS_PATH << " file!" << std::endl;
+	if (!PHYSFS_mount(datadir.c_str(), "/", 1)) {
+		std::cerr << "failed to open " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();
@@ -87,7 +109,7 @@ int main(void)
 
 	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay->get_font_size(), 0);
 	if (!font) {
-		std::cerr << "failed to load pirulen.ttf from " << ASSETS_PATH << "!" << std::endl;
+		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
 		al_uninstall_system();
