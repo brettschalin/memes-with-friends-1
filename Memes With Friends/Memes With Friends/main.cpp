@@ -159,8 +159,8 @@ int main(void)
 	test_card2->set_color(al_map_rgb(255, 0, 0));
 	test_card2->set_pos(50, 50);
 
-	int mouse_x, mouse_y = 0;
-	int sx, sy = 0;
+	int mouse_x = 0, mouse_y = 0;
+	int sx = 0, sy = 0;
 
 	bool redraw = true;
 
