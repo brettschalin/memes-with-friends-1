@@ -12,79 +12,34 @@
 #include <string>
 #include <iostream>
 
-Card::Card()
+Card::Card(std::string meme, std::vector<int> numbers)
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_real_distribution<> dist(1, 10000);
-	srand(dist(mt));
+	this->meme_image = al_load_bitmap(meme.c_str());
 
-	std::cout << "Initializing new card..." << std::endl;
-	ALLEGRO_FS_ENTRY *dir = al_create_fs_entry("memes");
-	std::vector<std::string> meme_list = this->list_memes(dir);
-
-	std::cout << "Listing meme list contents..." << std::endl;
-	for (std::vector<std::string>::const_iterator i = meme_list.begin(); i != meme_list.end(); ++i)
-		std::cout << *i << std::endl;
-
-	this->choose_meme(meme_list);
-
-	this->up = (rand() % 9) + 1;
-	this->down = (rand() % 9) + 1;
-	this->left = (rand() % 9) + 1;
-	this->right = (rand() % 9) + 1;
+	std::vector<int>::iterator it;
+	int i = 0;
+	for (it = numbers.begin(); it < numbers.end(); it++, i++)
+	{
+		switch (i) {
+		case 0:
+			this->up = *it;
+			break;
+		case 1:
+			this->down = *it;
+			break;
+		case 2:
+			this->left = *it;
+			break;
+		case 3:
+			this->right = *it;
+			break;
+		}
+	}
 }
 
 Card::~Card()
 {
 	al_destroy_bitmap(this->meme_image);
-}
-
-/* Wrote this when I was tired to try to prevent issues where a bad image or non image gets put in the memes directory. Not sure if works but seems to so far. */
-void Card::choose_meme(std::vector<std::string>& meme_list) {
-	std::cout << "Shuffling meme_list..." << std::endl;
-	std::random_shuffle(meme_list.begin(), meme_list.end());
-
-	std::cout << "Trying meme '" << meme_list.front() << "'" << std::endl;
-	this->meme_image = al_load_bitmap(meme_list.front().c_str());
-
-	if (!this->meme_image) {
-		std::cout << "Meme '" << meme_list.front() << "'" << std::endl;
-
-		this->choose_meme(meme_list);
-	}
-	else {
-		std::cout << "Chose meme '" << meme_list.front() << "'" << std::endl;
-		return;
-	}
-}
-
-std::vector<std::string> Card::list_memes(ALLEGRO_FS_ENTRY *dir)
-{
-	std::vector<std::string> memes;
-
-	ALLEGRO_FS_ENTRY *file;
-
-	al_open_directory(dir);
-	while (1) {
-		file = al_read_directory(dir);
-		if (!file) {
-			std::cout << "Invalid file/directory or no more files left. Breaking.." << std::endl;
-			break;
-		}
-		if (al_get_fs_entry_mode(file) & ALLEGRO_FILEMODE_ISDIR) {
-			std::cout << "Skipping directory" << std::endl;
-			continue;
-		}
-
-		std::cout << "Assigning '" << al_get_fs_entry_name(file) << "'" << std::endl;
-
-		memes.push_back(al_get_fs_entry_name(file));
-		al_destroy_fs_entry(file);
-	}
-	al_close_directory(dir);
-
-	return memes;
 }
 
 void Card::draw()

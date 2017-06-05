@@ -14,6 +14,7 @@
 #include "Player1Hand.h"
 #include "Player2Hand.h"
 #include "GameManager.h"
+#include "CardFactory.h"
 
 const float FPS = 60;
 
@@ -115,18 +116,20 @@ int main(void)
 	
 	al_start_timer(timer);
 
-	Player1Hand *p1hand = new Player1Hand(font, gamedisplay);
-	Player2Hand *p2hand = new Player2Hand(font, gamedisplay);
+	CardFactory *card_factory = new CardFactory();
+
+	Player1Hand *p1hand = new Player1Hand(font, gamedisplay, card_factory);
+	Player2Hand *p2hand = new Player2Hand(font, gamedisplay, card_factory);
 
 	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
 
-	Card *test_card = new Card();
+	Card *test_card = card_factory->create_card();
 	test_card->set_font(font);
 	test_card->set_gamedisplay(gamedisplay);
 	test_card->set_color(al_map_rgb(255, 0, 0));
 	test_card->set_pos(50, 50);
 
-	Card *test_card2 = new Card();
+	Card *test_card2 = card_factory->create_card();
 	test_card2->set_font(font);
 	test_card2->set_gamedisplay(gamedisplay);
 	test_card2->set_color(al_map_rgb(255, 0, 0));
@@ -215,6 +218,8 @@ int main(void)
 		}
 	}
 
+	delete test_card;
+	delete test_card2;
 	PHYSFS_deinit();
 	al_destroy_timer(timer);
 	al_destroy_event_queue(event_queue);
