@@ -5,6 +5,7 @@
 #include "Card.h"
 #include "GameDisplay.h"
 #include "CardFactory.h"
+#include <iostream>
 
 PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory)
 {
@@ -33,9 +34,7 @@ PlayerHand::~PlayerHand()
 
 void PlayerHand::draw()
 {
-	std::vector<Card *>::iterator it;
-	for (it = this->cards.begin(); it < this->cards.end(); it++) {
-		Card *card = *it;
-		card->draw();
+	for (auto &c : this->cards) {
+		c->draw();
 	}
 }

@@ -16,21 +16,20 @@ Card::Card(std::string meme, std::vector<int> numbers)
 {
 	this->meme_image = al_load_bitmap(meme.c_str());
 
-	std::vector<int>::iterator it;
-	int i = 0;
-	for (it = numbers.begin(); it < numbers.end(); it++, i++) {
-		switch (i) {
+	int i{0};
+	for (auto num : numbers) {
+		switch (i++) {
 		case 0:
-			this->up = *it;
+			this->up = num;
 			break;
 		case 1:
-			this->down = *it;
+			this->down = num;
 			break;
 		case 2:
-			this->left = *it;
+			this->left = num;
 			break;
 		case 3:
-			this->right = *it;
+			this->right = num;
 			break;
 		}
 	}
