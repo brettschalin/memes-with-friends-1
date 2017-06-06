@@ -140,19 +140,19 @@ int main(void)
 
 	//Testing and example usage for the GameManager class
 	GameManager game = GameManager();
-	int currentPlayer = game.getCurrentPlayer();
-	game.playCard(game.drawCardFromHand(3), 0, 0);
-	int testdown = (*game.getCard(0, 0)).get_down();
-	game.setCurrentPlayer(!currentPlayer);
-	game.playCard(game.drawCardFromHand(2), 0, 1);
-	int testup = (*game.getCard(0, 1)).get_up();
-	if (!((testdown > testup) == (*game.getCard(0,0)).compare_to_down(game.getCard(0, 1))))
+	int currentPlayer = game.get_current_player();
+	game.play_card(game.draw_card_from_hand(3), 0, 0);
+	int testdown = (*game.get_card(0, 0)).get_down();
+	game.set_current_player(!currentPlayer);
+	game.play_card(game.draw_card_from_hand(2), 0, 1);
+	int testup = (*game.get_card(0, 1)).get_up();
+	if (!((testdown > testup) == (*game.get_card(0,0)).compare_to_down(game.get_card(0, 1))))
 	{
-		std::cout << "Either card comparions or card placement is broken." << std::endl;
+		std::cout << "Either card comparisons or card placement is broken." << std::endl;
 	}
 
-	int player1Score = game.getScore(0);
-	int player2Score = game.getScore(1);
+	int player1Score = game.get_score(0);
+	int player2Score = game.get_score(1);
 	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
 	delete &game;

@@ -6,24 +6,23 @@ GameManager::GameManager()
 	//Set colors. Player 1 is red, Player 2 is blue
 	ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
 	ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
-	data->colors.push_back(red);
-	data->colors.push_back(blue);
+	data.colors.push_back(red);
+	data.colors.push_back(blue);
 
 	//Set initial scores
-	data->scores = new int[2];
-	data->scores[0] = HANDSIZE;
-	data->scores[1] = HANDSIZE;
+	data.scores[0] = HANDSIZE;
+	data.scores[1] = HANDSIZE;
 
 	//Assign who's first to play
-	int currPlayer = (rand() % 2);
-	setCurrentPlayer(currPlayer);
+	int curr_player = (rand() % 2);
+	set_current_player(curr_player);
 
 	//Initialize everyone's hand...
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < HANDSIZE; j++)
 		{
-			data->playerCards[i][j] = new Card();
+			data.player_cards[i][j] = card_factory.create_card();
 		}
 	}
 
@@ -32,7 +31,7 @@ GameManager::GameManager()
 	{
 		for (int j = 0; j < BOARDSIZE; j++)
 		{
-			data->board[i][j] = NULL;
+			data.board[i][j] = NULL;
 		}
 	}
 
@@ -44,8 +43,7 @@ GameManager::~GameManager()
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			if (data->playerCards[j][i] != NULL)
-				delete data->playerCards[j][i];
+			delete data.player_cards[j][i];
 		}
 	}
 
@@ -53,36 +51,37 @@ GameManager::~GameManager()
 	{
 		for (int j = 0; j < BOARDSIZE; j++)
 		{
-			if (data->board[j][i])
-				delete data->board[j][i];
+			delete data.board[j][i];
 		}
 	}
 
-	//These throw warnings about using the wrong form of delete.
-	//Would gladly appreciate corrections.
-	delete data->playerCards;
-	delete data->board;
-	delete data->scores;
-	delete data;
+
+	delete &card_factory;
+	delete data.scores;
+	delete &data;
+
 }
 
-int GameManager::getCurrentPlayer()
+int GameManager::get_current_player()
 {
-	return data->currentPlayer;
+	return data.current_player;
 }
 
-void GameManager::setCurrentPlayer(int player)
+void GameManager::set_current_player(int player)
 {
-	data->currentPlayer = player;
+	data.current_player = player;
 }
 
 
-//Only implements the game logic. Anything with animations or display is left to other functions
-//Assumes that a valid move is played
-void GameManager::playCard(Card* card, int x, int y)
+/*Only implements the game logic. Anything with animations or display is left to other functions.
+Assumes that a valid move is played
+Score counting is broken. It currently assumes the score would change on every single time the card comparison says to.
+This is not the case if a player plays next to one of their own cards.*/
+void GameManager::play_card(Card* card, int x, int y)
 {
 	
-	*data->board[x, y] = card;
+	data.board[x][y] = card;
+	data.scores[data.current_player]++; //one point for playing the card
 
 	bool switch_color = false;
 
@@ -92,7 +91,7 @@ void GameManager::playCard(Card* card, int x, int y)
 		{
 			if (!in_bounds(x + dx, y + dy)) continue;
 
-			Card* other = getCard(x + dx, y + dy);
+			Card* other = get_card(x + dx, y + dy);
 			if (other == NULL) continue;
 
 			if (dx == -1 && dy == 0)
@@ -126,11 +125,12 @@ void GameManager::playCard(Card* card, int x, int y)
 			}
 			if(switch_color)
 			{
-				(*other).set_color(data->colors[data->currentPlayer]);
+
+				//Flawed logic here, as explained above. This could be fixed if I knew how to read the color off cards.
+				(*other).set_color(data.colors[data.current_player]);
 				switch_color = false;
-				
-				data->scores[data->currentPlayer]++;
-				data->scores[!(data->currentPlayer)]--;
+				data.scores[data.current_player]++;
+				data.scores[!(data.current_player)]--;
 
 			}
 		}
@@ -145,29 +145,29 @@ bool GameManager::in_bounds(int x, int y)
 }
 
 
-Card* GameManager::getCard(int x, int y)
+Card* GameManager::get_card(int x, int y)
 {
 
-	return data->board[x][y];
+	return data.board[x][y];
 
 }
 
 //Removes a card from the hand and returns it.
-Card* GameManager::drawCardFromHand(int index)
+Card* GameManager::draw_card_from_hand(int index)
 {
-	int curr = data->currentPlayer;
-	Card* out = data->playerCards[curr][index];
-	data->playerCards[curr][index] = NULL;
+	int curr = data.current_player;
+	Card* out = data.player_cards[curr][index];
+	data.player_cards[curr][index] = NULL;
 	for (int i = index + 1; i < HANDSIZE; i++)
 	{
-		data->playerCards[curr][i - 1] = data->playerCards[curr][i];
+		data.player_cards[curr][i - 1] = data.player_cards[curr][i];
 	}
-	data->playerCards[curr][HANDSIZE - 1] = NULL;
+	data.player_cards[curr][HANDSIZE - 1] = NULL;
 	return out;
 
 }
 
-int GameManager::getScore(int player)
+int GameManager::get_score(int player)
 {
-	return data->scores[player];
+	return data.scores[player];
 }
