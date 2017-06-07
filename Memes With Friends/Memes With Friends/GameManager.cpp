@@ -9,9 +9,16 @@ GameManager::GameManager()
 	data.colors.push_back(red);
 	data.colors.push_back(blue);
 
-	//Set initial scores
-	data.scores[0] = HANDSIZE;
-	data.scores[1] = HANDSIZE;
+	//Initialize score array. Players start with their own cards,
+	//and -1 doesn't belong to any player.
+	for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
+	{
+		data.cards_by_player[i] = new int[HANDSIZE];
+		std::fill_n(data.cards_by_player[i], HANDSIZE, i);
+	}
+	data.cards_by_player[NUMBER_OF_PLAYERS + 1] = new int[BOARDSIZE*BOARDSIZE];
+	std::fill_n(data.cards_by_player[NUMBER_OF_PLAYERS + 1], BOARDSIZE*BOARDSIZE, -1);
+
 
 	//Assign who's first to play
 	int curr_player = (rand() % 2);
@@ -55,9 +62,11 @@ GameManager::~GameManager()
 		}
 	}
 
-
+	for (int i = 0; i <= NUMBER_OF_PLAYERS; i++)
+	{
+		delete data.cards_by_player[i];
+	}
 	delete &card_factory;
-	delete data.scores;
 	delete &data;
 
 }
@@ -75,13 +84,14 @@ void GameManager::set_current_player(int player)
 
 /*Only implements the game logic. Anything with animations or display is left to other functions.
 Assumes that a valid move is played
-Score counting is broken. It currently assumes the score would change on every single time the card comparison says to.
-This is not the case if a player plays next to one of their own cards.*/
+*/
 void GameManager::play_card(Card* card, int x, int y)
 {
 	
 	data.board[x][y] = card;
-	data.scores[data.current_player]++; //one point for playing the card
+	data.cards_by_player[NUMBER_OF_PLAYERS][x*BOARDSIZE + y] = data.current_player;
+
+	
 
 	bool switch_color = false;
 
@@ -126,11 +136,10 @@ void GameManager::play_card(Card* card, int x, int y)
 			if(switch_color)
 			{
 
-				//Flawed logic here, as explained above. This could be fixed if I knew how to read the color off cards.
 				(*other).set_color(data.colors[data.current_player]);
+				data.cards_by_player[NUMBER_OF_PLAYERS][(x+dx)*BOARDSIZE + (y+dy)] = data.current_player;
 				switch_color = false;
-				data.scores[data.current_player]++;
-				data.scores[!(data.current_player)]--;
+
 
 			}
 		}
@@ -169,5 +178,24 @@ Card* GameManager::draw_card_from_hand(int index)
 
 int GameManager::get_score(int player)
 {
-	return data.scores[player];
+	int score = 0;
+	for (int outer = 0; outer <= NUMBER_OF_PLAYERS; outer++)
+	{
+		for (int inner = 0; inner < HANDSIZE; inner++)
+		{
+			if (data.cards_by_player[outer][inner] == player)
+			{
+				score++;
+			}
+		}
+	}
+	for (int i = 0; i < BOARDSIZE*BOARDSIZE; i++)
+	{
+		if (data.cards_by_player[NUMBER_OF_PLAYERS][i] == player)
+		{
+			score++;
+		}
+	}
+	return score;
+
 }
