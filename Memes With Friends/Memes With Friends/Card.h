@@ -5,6 +5,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <vector>
+#include <memory>
 #include "GameDisplay.h"
 
 class Card
@@ -20,7 +21,8 @@ private:
 	int right;
 	ALLEGRO_COLOR CARD_COLOR;
 	ALLEGRO_COLOR border_color;
-	ALLEGRO_BITMAP *meme_image;
+	using Bitmap = std::unique_ptr<ALLEGRO_BITMAP, decltype(&al_destroy_bitmap)>;
+	Bitmap meme_image;
 	ALLEGRO_FONT *font;
 	GameDisplay *gamedisplay;
 public:
@@ -28,7 +30,6 @@ public:
 	const static int CARD_H = 266;
 	const static int CARD_BORDER_WIDTH = 5;
 	Card(std::string meme, std::vector<int> numbers);
-	~Card();
 	void draw();
 	void set_pos(int x1, int y1);
 	void set_color(ALLEGRO_COLOR color);

@@ -13,9 +13,8 @@
 #include <iostream>
 
 Card::Card(std::string meme, std::vector<int> numbers)
+	:meme_image{al_load_bitmap(meme.c_str()), &al_destroy_bitmap}
 {
-	this->meme_image = al_load_bitmap(meme.c_str());
-
 	int i{0};
 	for (auto num : numbers) {
 		switch (i++) {
@@ -35,20 +34,15 @@ Card::Card(std::string meme, std::vector<int> numbers)
 	}
 }
 
-Card::~Card()
-{
-	al_destroy_bitmap(this->meme_image);
-}
-
 void Card::draw()
 {
 	if (!this->meme_image) return;
 
 	// Draw the meme image first at the appropriate location
-	al_draw_scaled_bitmap(this->meme_image,
+	al_draw_scaled_bitmap(this->meme_image.get(),
 			      0, 0,
-			      al_get_bitmap_width(this->meme_image),
-			      al_get_bitmap_height(this->meme_image),
+			      al_get_bitmap_width(this->meme_image.get()),
+			      al_get_bitmap_height(this->meme_image.get()),
 			      this->x1, this->y1,
 			      Card::CARD_W, Card::CARD_H, 0);
 
