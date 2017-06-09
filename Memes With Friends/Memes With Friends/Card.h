@@ -7,42 +7,38 @@
 #include <vector>
 #include "GameDisplay.h"
 
-class Card
-{
+class Card {
 private:
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-	int up;
-	int down;
-	int left;
-	int right;
-	ALLEGRO_COLOR CARD_COLOR;
-	ALLEGRO_COLOR border_color;
-	ALLEGRO_BITMAP *meme_image;
-	ALLEGRO_FONT *font;
-	GameDisplay *gamedisplay;
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+    int up;
+    int down;
+    int left;
+    int right;
+    ALLEGRO_COLOR CARD_COLOR;
+    ALLEGRO_COLOR border_color;
+    ALLEGRO_BITMAP *meme_image;
+    ALLEGRO_FONT *font;
+    GameDisplay *gamedisplay;
 public:
-	const static int CARD_W = 166;
-	const static int CARD_H = 266;
-	const static int CARD_BORDER_WIDTH = 5;
-	Card();
-	~Card();
-	void draw();
-	void set_pos(int x1, int y1);
-	void set_color(ALLEGRO_COLOR color);
-	void set_font(ALLEGRO_FONT *font);
-	void set_gamedisplay(GameDisplay *gamedisplay);
-	void choose_meme(std::vector<std::string>& meme_list);
-	std::vector<std::string> list_memes(ALLEGRO_FS_ENTRY *dir);
-	int get_up();
-	int get_down();
-	int get_left();
-	int get_right();
-	bool compare_to_right(Card *othercard); // compares this card's right value to othercard's left value
-	bool compare_to_left(Card *othercard); // compares this card's left value to othercard's right value
-	bool compare_to_up(Card *othercard); // compares this card's up value to othercard's down value
-	bool compare_to_down(Card *othercard); // compares this card's down value to othercard's up value
+    const static int CARD_W = 166;
+    const static int CARD_H = 266;
+    const static int CARD_BORDER_WIDTH = 5;
+    Card(std::string meme, std::vector<int> numbers);
+    ~Card();
+    void draw();
+    void set_pos(int x1, int y1);
+    void set_color(ALLEGRO_COLOR color);
+    void set_font(ALLEGRO_FONT *font);
+    void set_gamedisplay(GameDisplay *gamedisplay);
+    int get_up();
+    int get_down();
+    int get_left();
+    int get_right();
+    bool compare_to_right(Card *othercard); // compares this card's right value to othercard's left value
+    bool compare_to_left(Card *othercard); // compares this card's left value to othercard's right value
+    bool compare_to_up(Card *othercard); // compares this card's up value to othercard's down value
+    bool compare_to_down(Card *othercard); // compares this card's down value to othercard's up value
 };
-
