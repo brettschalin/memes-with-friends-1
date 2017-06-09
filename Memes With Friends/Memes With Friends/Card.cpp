@@ -59,7 +59,7 @@ void Card::draw()
 				 this->x1 + (this->CARD_BORDER_WIDTH * 2) + 15,
 				 this->y1 + (this->CARD_H / 2) + 15,
 				 this->gamedisplay->get_background_color());
-	al_draw_text(font, al_map_rgb(0, 0, 0),
+	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
 		     this->x1 + (this->CARD_BORDER_WIDTH * 2),
 		     this->y1 + (this->CARD_H / 2),
 		     ALLEGRO_ALIGN_LEFT,
@@ -71,7 +71,7 @@ void Card::draw()
 				 this->x1 + this->CARD_W - (this->CARD_BORDER_WIDTH * 2) + 5,
 				 this->y1 + (this->CARD_H / 2) + 15,
 				 this->gamedisplay->get_background_color());
-	al_draw_text(font, al_map_rgb(0, 0, 0),
+	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
 		     this->x1 + this->CARD_W - (this->CARD_BORDER_WIDTH * 2) - 10,
 		     this->y1 + (this->CARD_H / 2),
 		     ALLEGRO_ALIGN_LEFT,
@@ -83,7 +83,7 @@ void Card::draw()
 				 this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) + 15,
 				 this->y1 + (this->CARD_BORDER_WIDTH * 2) + 15,
 				 this->gamedisplay->get_background_color());
-	al_draw_text(font, al_map_rgb(0, 0, 0),
+	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
 		     this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2),
 		     this->y1 + (this->CARD_BORDER_WIDTH * 2),
 		     ALLEGRO_ALIGN_LEFT,
@@ -95,7 +95,7 @@ void Card::draw()
 				 this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) + 15,
 				 this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) + 5,
 				 this->gamedisplay->get_background_color());
-	al_draw_text(font, al_map_rgb(0, 0, 0),
+	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
 		     this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2),
 		     this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) - 10,
 		     ALLEGRO_ALIGN_LEFT,
@@ -115,7 +115,7 @@ void Card::set_color(ALLEGRO_COLOR color)
 	this->CARD_COLOR = color;
 }
 
-void Card::set_font(ALLEGRO_FONT *font)
+void Card::set_font(std::shared_ptr<ALLEGRO_FONT> font)
 {
 	this->font = font;
 }

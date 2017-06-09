@@ -109,7 +109,10 @@ int main(void)
 
 	al_set_physfs_file_interface();
 
-	ALLEGRO_FONT *font = al_load_ttf_font("pirulen.ttf", gamedisplay.get_font_size(), 0);
+	std::shared_ptr<ALLEGRO_FONT> font{
+		al_load_ttf_font("pirulen.ttf", gamedisplay.get_font_size(), 0),
+		&al_destroy_font
+	};
 	if (!font) {
 		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
@@ -123,7 +126,6 @@ int main(void)
 		std::cerr << "failed to create event_queue!" << std::endl;
 		PHYSFS_deinit();
 		al_destroy_timer(timer);
-		al_destroy_font(font);
 		al_uninstall_system();
 		return -1;
 	}
@@ -205,11 +207,11 @@ int main(void)
 				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(test_card2) ? "True" : "False");
 				std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
 				std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
-				al_draw_multiline_text(font, al_map_rgb(0, 0, 0), 10, 10, 700, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
+				al_draw_multiline_text(font.get(), al_map_rgb(0, 0, 0), 10, 10, 700, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
 			}
 
 			// draw help text
-			al_draw_multiline_text(font, al_map_rgb(0, 0, 0), 10, 1040, 500, 0, ALLEGRO_ALIGN_LEFT, "Press D to toggle DEBUG info\nPress ESC to exit");
+			al_draw_multiline_text(font.get(), al_map_rgb(0, 0, 0), 10, 1040, 500, 0, ALLEGRO_ALIGN_LEFT, "Press D to toggle DEBUG info\nPress ESC to exit");
 
 			al_flip_display();
 
@@ -221,7 +223,6 @@ int main(void)
 	PHYSFS_deinit();
 	al_destroy_timer(timer);
 	al_destroy_event_queue(event_queue);
-	al_destroy_font(font);
 	al_uninstall_system();
 
 	return 0;

@@ -7,7 +7,7 @@
 #include "CardFactory.h"
 #include <iostream>
 
-PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory)
+PlayerHand::PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory)
 {
 	this->font = font;
 	this->color = color;

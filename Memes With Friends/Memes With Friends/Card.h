@@ -23,7 +23,7 @@ private:
 	ALLEGRO_COLOR border_color;
 	using Bitmap = std::unique_ptr<ALLEGRO_BITMAP, decltype(&al_destroy_bitmap)>;
 	Bitmap meme_image;
-	ALLEGRO_FONT *font;
+	std::shared_ptr<ALLEGRO_FONT> font;
 	GameDisplay *gamedisplay;
 public:
 	const static int CARD_W = 166;
@@ -33,7 +33,7 @@ public:
 	void draw();
 	void set_pos(int x1, int y1);
 	void set_color(ALLEGRO_COLOR color);
-	void set_font(ALLEGRO_FONT *font);
+	void set_font(std::shared_ptr<ALLEGRO_FONT> font);
 	void set_gamedisplay(GameDisplay *gamedisplay);
 	int get_up();
 	int get_down();

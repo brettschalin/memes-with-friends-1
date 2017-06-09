@@ -10,7 +10,7 @@ class Player1Hand :
 	public PlayerHand
 {
 public:
-	Player1Hand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, CardFactory *card_factory);
+	Player1Hand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, CardFactory *card_factory);
 	~Player1Hand();
 	void draw();
 };
