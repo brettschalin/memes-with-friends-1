@@ -5,6 +5,7 @@
 #include <vector>
 #include "Card.h"
 #include "GameDisplay.h"
+#include "CardFactory.h"
 
 class PlayerHand
 {
@@ -15,7 +16,7 @@ protected:
 	ALLEGRO_FONT *font;
 	std::vector<Card *> cards;
 public:
-	PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y);
+	PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory);
 	~PlayerHand();
 	void draw();
 };

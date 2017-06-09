@@ -2,8 +2,9 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include "GameDisplay.h"
+#include "CardFactory.h"
 
-Player1Hand::Player1Hand(ALLEGRO_FONT *font, GameDisplay *gamedisplay) : PlayerHand::PlayerHand(font, gamedisplay, al_map_rgb(255, 0, 0), 50, 50)
+Player1Hand::Player1Hand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, CardFactory *card_factory) : PlayerHand::PlayerHand(font, gamedisplay, al_map_rgb(255, 0, 0), 50, 50, card_factory)
 {
 }
 
