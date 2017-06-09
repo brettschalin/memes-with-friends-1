@@ -142,13 +142,13 @@ int main(void)
 
 	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
 
-	Card *test_card = card_factory.create_card();
+	std::unique_ptr<Card> test_card{card_factory.create_card()};
 	test_card->set_font(font);
 	test_card->set_gamedisplay(&gamedisplay);
 	test_card->set_color(al_map_rgb(255, 0, 0));
 	test_card->set_pos(50, 50);
 
-	Card *test_card2 = card_factory.create_card();
+	std::unique_ptr<Card> test_card2{card_factory.create_card()};
 	test_card2->set_font(font);
 	test_card2->set_gamedisplay(&gamedisplay);
 	test_card2->set_color(al_map_rgb(255, 0, 0));
@@ -197,7 +197,7 @@ int main(void)
 			if (debug) {
 				// if debug is toggled on, draw debug information above everything else
 				std::tie(sx, sy) = gamedisplay.convert_coordinates(mouse_x, mouse_y);
-				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(test_card2) ? "True" : "False");
+				std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(test_card2.get()) ? "True" : "False");
 				std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
 				std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
 				al_draw_multiline_text(font.get(), al_map_rgb(0, 0, 0), 10, 10, 700, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
@@ -211,8 +211,6 @@ int main(void)
 		}
 	}
 
-	delete test_card;
-	delete test_card2;
 	PHYSFS_deinit();
 	al_destroy_event_queue(event_queue);
 	al_uninstall_system();
