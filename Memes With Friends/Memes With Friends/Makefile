@@ -15,14 +15,14 @@ OBJ := main.o Card.o GameDisplay.o CardFactory.o PlayerHand.o Player1Hand.o Play
 
 all: $(PROG)
 $(PROG): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 debug: all
 debug: CXXFLAGS += -ggdb -Og -Werror
 debug: LDFLAGS += -ggdb -Og
 
 clean:
-	$(RM) $(OBJ) $(OBJ:.o=.d) $(PROG) $(MANPAGE)
+	$(RM) $(OBJ) $(OBJ:.o=.d) $(PROG)
 
 -include $(OBJ:.o=.d)
 
