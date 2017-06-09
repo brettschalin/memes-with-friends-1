@@ -145,22 +145,22 @@ int Card::get_right()
 	return right;
 }
 
-bool Card::compare_to_right(Card *othercard)
+bool Card::compare_to_right(Card &othercard)
 {
-	return right > othercard->get_left();
+	return right > othercard.get_left();
 }
 
-bool Card::compare_to_left(Card *othercard)
+bool Card::compare_to_left(Card &othercard)
 {
-	return left > othercard->get_right();
+	return left > othercard.get_right();
 }
 
-bool Card::compare_to_up(Card *othercard)
+bool Card::compare_to_up(Card &othercard)
 {
-	return up > othercard->get_down();
+	return up > othercard.get_down();
 }
 
-bool Card::compare_to_down(Card *othercard)
+bool Card::compare_to_down(Card &othercard)
 {
-	return down > othercard->get_up();
+	return down > othercard.get_up();
 }

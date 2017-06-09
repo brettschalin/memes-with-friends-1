@@ -39,8 +39,8 @@ public:
 	int get_down();
 	int get_left();
 	int get_right();
-	bool compare_to_right(Card *othercard); // compares this card's right value to othercard's left value
-	bool compare_to_left(Card *othercard); // compares this card's left value to othercard's right value
-	bool compare_to_up(Card *othercard); // compares this card's up value to othercard's down value
-	bool compare_to_down(Card *othercard); // compares this card's down value to othercard's up value
+	bool compare_to_right(Card &othercard); // compares this card's right value to othercard's left value
+	bool compare_to_left(Card &othercard); // compares this card's left value to othercard's right value
+	bool compare_to_up(Card &othercard); // compares this card's up value to othercard's down value
+	bool compare_to_down(Card &othercard); // compares this card's down value to othercard's up value
 };
