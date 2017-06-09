@@ -167,11 +167,18 @@ Card* GameManager::draw_card_from_hand(int index)
 	int curr = data.current_player;
 	Card* out = data.player_cards[curr][index];
 	data.player_cards[curr][index] = NULL;
-	for (int i = index + 1; i < HANDSIZE; i++)
+	
+	int i = 0;
+	
+	while (data.player_cards[curr][i] != NULL && i < HANDSIZE)
 	{
 		data.player_cards[curr][i - 1] = data.player_cards[curr][i];
+		i++;
 	}
-	data.player_cards[curr][HANDSIZE - 1] = NULL;
+	if (i == 0) i = 1; //make sure there's no indexing errors
+	data.player_cards[curr][i-1] = NULL;
+	data.cards_by_player[curr][i-1] = -1;
+
 	return out;
 
 }
