@@ -21,8 +21,7 @@ private:
 	int right;
 	ALLEGRO_COLOR CARD_COLOR;
 	ALLEGRO_COLOR border_color;
-	using Bitmap = std::unique_ptr<ALLEGRO_BITMAP, decltype(&al_destroy_bitmap)>;
-	Bitmap meme_image;
+	std::shared_ptr<ALLEGRO_BITMAP> meme_image;
 	std::shared_ptr<ALLEGRO_FONT> font;
 	GameDisplay *gamedisplay;
 public:
