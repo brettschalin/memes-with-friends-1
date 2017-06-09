@@ -19,16 +19,16 @@ Card::Card(std::string meme, std::vector<int> numbers)
 	for (auto num : numbers) {
 		switch (i++) {
 		case 0:
-			this->up = num;
+			up = num;
 			break;
 		case 1:
-			this->down = num;
+			down = num;
 			break;
 		case 2:
-			this->left = num;
+			left = num;
 			break;
 		case 3:
-			this->right = num;
+			right = num;
 			break;
 		}
 	}
@@ -36,68 +36,68 @@ Card::Card(std::string meme, std::vector<int> numbers)
 
 void Card::draw()
 {
-	if (!this->meme_image) return;
+	if (meme_image == nullptr) return;
 
 	// Draw the meme image first at the appropriate location
-	al_draw_scaled_bitmap(this->meme_image.get(),
+	al_draw_scaled_bitmap(meme_image.get(),
 			      0, 0,
-			      al_get_bitmap_width(this->meme_image.get()),
-			      al_get_bitmap_height(this->meme_image.get()),
-			      this->x1, this->y1,
+			      al_get_bitmap_width(meme_image.get()),
+			      al_get_bitmap_height(meme_image.get()),
+			      x1, y1,
 			      Card::CARD_W, Card::CARD_H, 0);
 
 	// Draw the border around the meme image to make it a card
-	al_draw_rectangle(this->x1,
-			  this->y1,
-			  this->x2,
-			  this->y2,
-			  this->CARD_COLOR, Card::CARD_BORDER_WIDTH);
+	al_draw_rectangle(x1,
+			  y1,
+			  x2,
+			  y2,
+			  CARD_COLOR, Card::CARD_BORDER_WIDTH);
 
 	// Draw left number
-	al_draw_filled_rectangle(this->x1 + (this->CARD_BORDER_WIDTH * 2) - 5,
-				 this->y1 + (this->CARD_H / 2) - 5,
-				 this->x1 + (this->CARD_BORDER_WIDTH * 2) + 15,
-				 this->y1 + (this->CARD_H / 2) + 15,
-				 this->gamedisplay->get_background_color());
+	al_draw_filled_rectangle(x1 + (CARD_BORDER_WIDTH * 2) - 5,
+				 y1 + (CARD_H / 2) - 5,
+				 x1 + (CARD_BORDER_WIDTH * 2) + 15,
+				 y1 + (CARD_H / 2) + 15,
+				 gamedisplay->get_background_color());
 	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
-		     this->x1 + (this->CARD_BORDER_WIDTH * 2),
-		     this->y1 + (this->CARD_H / 2),
+		     x1 + (CARD_BORDER_WIDTH * 2),
+		     y1 + (CARD_H / 2),
 		     ALLEGRO_ALIGN_LEFT,
 		     std::to_string(left).c_str());
 
 	// Draw right number
-	al_draw_filled_rectangle(this->x1 + this->CARD_W - (this->CARD_BORDER_WIDTH * 2) - 15,
-				 this->y1 + (this->CARD_H / 2) - 5,
-				 this->x1 + this->CARD_W - (this->CARD_BORDER_WIDTH * 2) + 5,
-				 this->y1 + (this->CARD_H / 2) + 15,
-				 this->gamedisplay->get_background_color());
+	al_draw_filled_rectangle(x1 + CARD_W - (CARD_BORDER_WIDTH * 2) - 15,
+				 y1 + (CARD_H / 2) - 5,
+				 x1 + CARD_W - (CARD_BORDER_WIDTH * 2) + 5,
+				 y1 + (CARD_H / 2) + 15,
+				 gamedisplay->get_background_color());
 	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
-		     this->x1 + this->CARD_W - (this->CARD_BORDER_WIDTH * 2) - 10,
-		     this->y1 + (this->CARD_H / 2),
+		     x1 + CARD_W - (CARD_BORDER_WIDTH * 2) - 10,
+		     y1 + (CARD_H / 2),
 		     ALLEGRO_ALIGN_LEFT,
 		     std::to_string(right).c_str());
 
 	// Draw up number
-	al_draw_filled_rectangle(this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) - 5,
-				 this->y1 + (this->CARD_BORDER_WIDTH * 2) - 5,
-				 this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) + 15,
-				 this->y1 + (this->CARD_BORDER_WIDTH * 2) + 15,
-				 this->gamedisplay->get_background_color());
+	al_draw_filled_rectangle(x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2) - 5,
+				 y1 + (CARD_BORDER_WIDTH * 2) - 5,
+				 x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2) + 15,
+				 y1 + (CARD_BORDER_WIDTH * 2) + 15,
+				 gamedisplay->get_background_color());
 	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
-		     this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2),
-		     this->y1 + (this->CARD_BORDER_WIDTH * 2),
+		     x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2),
+		     y1 + (CARD_BORDER_WIDTH * 2),
 		     ALLEGRO_ALIGN_LEFT,
 		     std::to_string(up).c_str());
 
 	// Draw down number
-	al_draw_filled_rectangle(this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) - 5,
-				 this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) - 15,
-				 this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2) + 15,
-				 this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) + 5,
-				 this->gamedisplay->get_background_color());
+	al_draw_filled_rectangle(x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2) - 5,
+				 y1 + CARD_H - (CARD_BORDER_WIDTH * 2) - 15,
+				 x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2) + 15,
+				 y1 + CARD_H - (CARD_BORDER_WIDTH * 2) + 5,
+				 gamedisplay->get_background_color());
 	al_draw_text(font.get(), al_map_rgb(0, 0, 0),
-		     this->x1 + (this->CARD_W / 2) - (this->CARD_BORDER_WIDTH * 2),
-		     this->y1 + this->CARD_H - (this->CARD_BORDER_WIDTH * 2) - 10,
+		     x1 + (CARD_W / 2) - (CARD_BORDER_WIDTH * 2),
+		     y1 + CARD_H - (CARD_BORDER_WIDTH * 2) - 10,
 		     ALLEGRO_ALIGN_LEFT,
 		     std::to_string(down).c_str());
 }
@@ -112,7 +112,7 @@ void Card::set_pos(int x1, int y1)
 
 void Card::set_color(ALLEGRO_COLOR color)
 {
-	this->CARD_COLOR = color;
+	CARD_COLOR = color;
 }
 
 void Card::set_font(std::shared_ptr<ALLEGRO_FONT> font)
@@ -127,40 +127,40 @@ void Card::set_gamedisplay(GameDisplay *gamedisplay)
 
 int Card::get_up()
 {
-	return this->up;
+	return up;
 }
 
 int Card::get_down()
 {
-	return this->down;
+	return down;
 }
 
 int Card::get_left()
 {
-	return this->left;
+	return left;
 }
 
 int Card::get_right()
 {
-	return this->right;
+	return right;
 }
 
 bool Card::compare_to_right(Card *othercard)
 {
-	return this->right > othercard->get_left();
+	return right > othercard->get_left();
 }
 
 bool Card::compare_to_left(Card *othercard)
 {
-	return this->left > othercard->get_right();
+	return left > othercard->get_right();
 }
 
 bool Card::compare_to_up(Card *othercard)
 {
-	return this->up > othercard->get_down();
+	return up > othercard->get_down();
 }
 
 bool Card::compare_to_down(Card *othercard)
 {
-	return this->down > othercard->get_up();
+	return down > othercard->get_up();
 }
