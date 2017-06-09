@@ -27,7 +27,6 @@ const float FPS = 60;
 int main(void)
 {
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
-	ALLEGRO_TIMER *timer = NULL;
 	bool doexit = false;
 	bool debug = false;
 
@@ -51,7 +50,7 @@ int main(void)
 		return -1;
 	}
 
-	timer = al_create_timer(1.0 / FPS);
+	std::unique_ptr<ALLEGRO_TIMER, decltype(&al_destroy_timer)> timer{al_create_timer(1.0 / FPS), &al_destroy_timer};
 	if (!timer) {
 		std::cerr << "failed to create timer!" << std::endl;
 		al_uninstall_system();
@@ -62,21 +61,18 @@ int main(void)
 
 	if (!gamedisplay.valid_display()) {
 		std::cerr << "failed to create display!" << std::endl;
-		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_primitives_addon()) {
 		std::cerr << "failed to initialize primitives addon!" << std::endl;
-		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_image_addon()) {
 		std::cerr << "failed to initialize image addon!" << std::endl;
-		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
@@ -103,7 +99,6 @@ int main(void)
 	if (!PHYSFS_mount(datadir.c_str(), "/", 1)) {
 		std::cerr << "failed to open " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
-		al_destroy_timer(timer);
 		al_uninstall_system();
 	}
 
@@ -116,7 +111,6 @@ int main(void)
 	if (!font) {
 		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
 		PHYSFS_deinit();
-		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
@@ -125,14 +119,13 @@ int main(void)
 	if (!event_queue) {
 		std::cerr << "failed to create event_queue!" << std::endl;
 		PHYSFS_deinit();
-		al_destroy_timer(timer);
 		al_uninstall_system();
 		return -1;
 	}
 
 	al_register_event_source(event_queue, al_get_display_event_source(gamedisplay.get_display()));
 
-	al_register_event_source(event_queue, al_get_timer_event_source(timer));
+	al_register_event_source(event_queue, al_get_timer_event_source(timer.get()));
 
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
@@ -140,7 +133,7 @@ int main(void)
 
 	gamedisplay.set_background_color(al_map_rgb(241, 241, 212));
 	
-	al_start_timer(timer);
+	al_start_timer(timer.get());
 
 	CardFactory card_factory = CardFactory();
 
@@ -221,7 +214,6 @@ int main(void)
 	delete test_card;
 	delete test_card2;
 	PHYSFS_deinit();
-	al_destroy_timer(timer);
 	al_destroy_event_queue(event_queue);
 	al_uninstall_system();
 
