@@ -26,7 +26,6 @@ const float FPS = 60;
 
 int main(void)
 {
-	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	bool doexit = false;
 	bool debug = false;
 
@@ -115,7 +114,10 @@ int main(void)
 		return -1;
 	}
 
-	event_queue = al_create_event_queue();
+	std::unique_ptr<ALLEGRO_EVENT_QUEUE, decltype(&al_destroy_event_queue)> event_queue{
+		al_create_event_queue(),
+		&al_destroy_event_queue
+	};
 	if (!event_queue) {
 		std::cerr << "failed to create event_queue!" << std::endl;
 		PHYSFS_deinit();
@@ -123,13 +125,13 @@ int main(void)
 		return -1;
 	}
 
-	al_register_event_source(event_queue, al_get_display_event_source(gamedisplay.get_display()));
+	al_register_event_source(event_queue.get(), al_get_display_event_source(gamedisplay.get_display()));
 
-	al_register_event_source(event_queue, al_get_timer_event_source(timer.get()));
+	al_register_event_source(event_queue.get(), al_get_timer_event_source(timer.get()));
 
-	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue.get(), al_get_keyboard_event_source());
 
-	al_register_event_source(event_queue, al_get_mouse_event_source());
+	al_register_event_source(event_queue.get(), al_get_mouse_event_source());
 
 	gamedisplay.set_background_color(al_map_rgb(241, 241, 212));
 	
@@ -162,7 +164,7 @@ int main(void)
 	while (!doexit)
 	{
 		ALLEGRO_EVENT ev;
-		al_wait_for_event(event_queue, &ev);
+		al_wait_for_event(event_queue.get(), &ev);
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
 			redraw = true;
@@ -185,7 +187,7 @@ int main(void)
 			}
 		}
 
-		if (redraw && al_is_event_queue_empty(event_queue)) {
+		if (redraw && al_is_event_queue_empty(event_queue.get())) {
 
 			redraw = false;
 
@@ -212,7 +214,6 @@ int main(void)
 	}
 
 	PHYSFS_deinit();
-	al_destroy_event_queue(event_queue);
 	al_uninstall_system();
 
 	return 0;
