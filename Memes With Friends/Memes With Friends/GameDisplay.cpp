@@ -6,27 +6,26 @@
 
 GameDisplay::GameDisplay()
 {
-	al_get_display_mode(al_get_num_display_modes() - 1, &this->disp_data);
+	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
 	al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 	al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
 	al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
-	this->display = al_create_display(this->disp_data.width, this->disp_data.height);
+	display = al_create_display(disp_data.width, disp_data.height);
 
-	int windowWidth = al_get_display_width(this->display);
-	int windowHeight = al_get_display_height(this->display);
-	int screenWidth = this->SCREEN_W;
-	int screenHeight = this->SCREEN_H;
+	int windowWidth = al_get_display_width(display);
+	int windowHeight = al_get_display_height(display);
+	int screenWidth = SCREEN_W;
+	int screenHeight = SCREEN_H;
 
 	float sx = windowWidth / (float)screenWidth;
 	float sy = windowHeight / (float)screenHeight;
 
 	if ((sx < (float)0.0) || (sy < (float)0.0)) {
-		this->fontsize = 16;
-	}
-	else {
-		this->fontsize = 12;
+		fontsize = 16;
+	} else {
+		fontsize = 12;
 	}
 
 	ALLEGRO_TRANSFORM trans;
