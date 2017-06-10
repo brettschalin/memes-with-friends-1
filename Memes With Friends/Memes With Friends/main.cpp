@@ -33,51 +33,27 @@ struct PhysFS {
 	~PhysFS() { PHYSFS_deinit(); }
 };
 
+static int init_error(std::string message)
+{
+	std::cerr << "failed to initialize " << message << "\n";
+	return EXIT_FAILURE;
+}
+
 int main(void)
 {
-	bool doexit = false;
-	bool debug = false;
-
-	if (!al_init()) {
-		std::cerr << "failed to initialize allegro!" << std::endl;
-		return -1;
-	}
-	
+	if (!al_init()) return init_error("allegro");
 	al_init_font_addon();
 	al_init_ttf_addon();
-
-	if (!al_install_keyboard()) {
-		std::cerr << "failed to initialize the keyboard!" << std::endl;
-		return -1;
-	}
-
-	if (!al_install_mouse()) {
-		std::cerr << "failed to initialize the mouse!" << std::endl;
-		return -1;
-	}
+	if (!al_install_keyboard()) return init_error("keyboard");
+	if (!al_install_mouse()) return init_error("mouse");
 
 	std::unique_ptr<ALLEGRO_TIMER, decltype(&al_destroy_timer)> timer{al_create_timer(1.0 / FPS), &al_destroy_timer};
-	if (!timer) {
-		std::cerr << "failed to create timer!" << std::endl;
-		return -1;
-	}
+	if (timer == nullptr) return init_error("timer");
 
-	GameDisplay gamedisplay = GameDisplay();
-
-	if (!gamedisplay.valid_display()) {
-		std::cerr << "failed to create display!" << std::endl;
-		return -1;
-	}
-
-	if (!al_init_primitives_addon()) {
-		std::cerr << "failed to initialize primitives addon!" << std::endl;
-		return -1;
-	}
-
-	if (!al_init_image_addon()) {
-		std::cerr << "failed to initialize image addon!" << std::endl;
-		return -1;
-	}
+	GameDisplay gamedisplay;
+	if (!gamedisplay.valid_display()) return init_error("display");
+	if (!al_init_primitives_addon()) return init_error("primitives addon");
+	if (!al_init_image_addon()) return init_error("image addon");
 
 	// std::string from NULL char * is undefined behavior and causes crashing
 	// to resolve, we will try to grab the environment variable into datadir_raw
@@ -98,9 +74,8 @@ int main(void)
 	}
 
 	PhysFS physfs_guard;
-	if (!PHYSFS_mount(datadir.c_str(), "/", 1)) {
-		std::cerr << "failed to open " << datadir << "!" << std::endl;
-	}
+	std::cout << "loading assets from: " << datadir << "\n";
+	if (!PHYSFS_mount(datadir.c_str(), "/", 1)) return init_error("assets");
 
 	al_set_physfs_file_interface();
 
@@ -108,19 +83,13 @@ int main(void)
 		al_load_ttf_font("pirulen.ttf", gamedisplay.get_font_size(), 0),
 		&al_destroy_font
 	};
-	if (!font) {
-		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
-		return -1;
-	}
+	if (!font) return init_error("font (pirulen.ttf)");
 
 	std::unique_ptr<ALLEGRO_EVENT_QUEUE, decltype(&al_destroy_event_queue)> event_queue{
 		al_create_event_queue(),
 		&al_destroy_event_queue
 	};
-	if (!event_queue) {
-		std::cerr << "failed to create event_queue!" << std::endl;
-		return -1;
-	}
+	if (!event_queue) return init_error("event_queue");
 
 	al_register_event_source(event_queue.get(), al_get_display_event_source(gamedisplay.get_display()));
 
@@ -134,7 +103,7 @@ int main(void)
 	
 	al_start_timer(timer.get());
 
-	CardFactory card_factory = CardFactory();
+	CardFactory card_factory;
 
 	Player1Hand p1hand{font, &gamedisplay, &card_factory};
 	Player2Hand p2hand{font, &gamedisplay, &card_factory};
@@ -152,6 +121,9 @@ int main(void)
 	test_card2->set_gamedisplay(&gamedisplay);
 	test_card2->set_color(al_map_rgb(255, 0, 0));
 	test_card2->set_pos(50, 50);
+
+	bool doexit = false;
+	bool debug = false;
 
 	int mouse_x = 0, mouse_y = 0;
 	int sx = 0, sy = 0;
