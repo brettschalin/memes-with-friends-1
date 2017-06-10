@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
@@ -11,6 +10,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <vector>
 #include "Card.h"
 #include "GameDisplay.h"
 #include "PlayerHand.h"
@@ -23,6 +23,15 @@
 #endif
 
 const float FPS = 60;
+
+/*
+ * Makeshift scope guard to make sure PHYSFS_deinit happens AFTER all our fonts
+ * get destroyed. Might be good to improve this eventually.
+ */
+struct PhysFS {
+	PhysFS() { PHYSFS_init(NULL); }
+	~PhysFS() { PHYSFS_deinit(); }
+};
 
 int main(void)
 {
@@ -39,20 +48,17 @@ int main(void)
 
 	if (!al_install_keyboard()) {
 		std::cerr << "failed to initialize the keyboard!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_install_mouse()) {
 		std::cerr << "failed to initialize the mouse!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
 	std::unique_ptr<ALLEGRO_TIMER, decltype(&al_destroy_timer)> timer{al_create_timer(1.0 / FPS), &al_destroy_timer};
 	if (!timer) {
 		std::cerr << "failed to create timer!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
@@ -60,19 +66,16 @@ int main(void)
 
 	if (!gamedisplay.valid_display()) {
 		std::cerr << "failed to create display!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_primitives_addon()) {
 		std::cerr << "failed to initialize primitives addon!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
 	if (!al_init_image_addon()) {
 		std::cerr << "failed to initialize image addon!" << std::endl;
-		al_uninstall_system();
 		return -1;
 	}
 
@@ -94,11 +97,9 @@ int main(void)
 		datadir += "/assets.zip";
 	}
 
-	PHYSFS_init(NULL);
+	PhysFS physfs_guard;
 	if (!PHYSFS_mount(datadir.c_str(), "/", 1)) {
 		std::cerr << "failed to open " << datadir << "!" << std::endl;
-		PHYSFS_deinit();
-		al_uninstall_system();
 	}
 
 	al_set_physfs_file_interface();
@@ -109,8 +110,6 @@ int main(void)
 	};
 	if (!font) {
 		std::cerr << "failed to load pirulen.ttf from " << datadir << "!" << std::endl;
-		PHYSFS_deinit();
-		al_uninstall_system();
 		return -1;
 	}
 
@@ -120,8 +119,6 @@ int main(void)
 	};
 	if (!event_queue) {
 		std::cerr << "failed to create event_queue!" << std::endl;
-		PHYSFS_deinit();
-		al_uninstall_system();
 		return -1;
 	}
 
@@ -139,8 +136,8 @@ int main(void)
 
 	CardFactory card_factory = CardFactory();
 
-	Player1Hand p1hand = Player1Hand(font, &gamedisplay, &card_factory);
-	Player2Hand p2hand = Player2Hand(font, &gamedisplay, &card_factory);
+	Player1Hand p1hand{font, &gamedisplay, &card_factory};
+	Player2Hand p2hand{font, &gamedisplay, &card_factory};
 
 	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
 
@@ -212,9 +209,6 @@ int main(void)
 
 		}
 	}
-
-	PHYSFS_deinit();
-	al_uninstall_system();
 
 	return 0;
 }
