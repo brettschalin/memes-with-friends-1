@@ -105,8 +105,8 @@ int main(void)
 
 	CardFactory card_factory;
 
-	Player1Hand p1hand{font, &gamedisplay, &card_factory};
-	Player2Hand p2hand{font, &gamedisplay, &card_factory};
+	Player1Hand p1hand{font, &gamedisplay, card_factory};
+	Player2Hand p2hand{font, &gamedisplay, card_factory};
 
 	/* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
 
