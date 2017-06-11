@@ -1,8 +1,7 @@
-#include "GameDisplay.h"
-#include <algorithm>
-#include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <tuple>
+
+#include "GameDisplay.h"
 
 GameDisplay::GameDisplay()
 {
@@ -22,7 +21,7 @@ GameDisplay::GameDisplay()
 	float sx = windowWidth / (float)screenWidth;
 	float sy = windowHeight / (float)screenHeight;
 
-	if ((sx < (float)0.0) || (sy < (float)0.0)) {
+	if ((sx < 0.0f) || (sy < 0.0f)) {
 		fontsize = 16;
 	} else {
 		fontsize = 12;
