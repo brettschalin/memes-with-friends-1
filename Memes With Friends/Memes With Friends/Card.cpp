@@ -1,16 +1,11 @@
-#include "Card.h"
-#include <ctime>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_physfs.h>
+#include <allegro5/allegro_primitives.h>
+#include <memory>
 #include <vector>
-#include <random>
-#include <algorithm>
-#include <string>
-#include <iostream>
+
+#include "Card.h"
+
+#include "GameDisplay.h"
 
 Card::Card(std::string meme, std::vector<int> numbers)
 	:meme_image{al_load_bitmap(meme.c_str()), &al_destroy_bitmap}
