@@ -84,7 +84,7 @@ int main(void)
 	// std::string from NULL char * is undefined behavior and causes crashing
 	// to resolve, we will try to grab the environment variable into datadir_raw
 	// if it's NULL or blank, initialize with contents of DATADIR
-    const char *datadir_raw = std::getenv("MWF_DATADIR");
+	const char *datadir_raw = std::getenv("MWF_DATADIR");
 	if (datadir_raw == NULL || std::strlen(datadir_raw) == 0) {
 		datadir_raw = DATADIR;
 	}
