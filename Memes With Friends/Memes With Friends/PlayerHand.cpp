@@ -1,41 +1,28 @@
-#include "PlayerHand.h"
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <vector>
+#include <memory>
+
+#include "PlayerHand.h"
+
 #include "Card.h"
-#include "GameDisplay.h"
 #include "CardFactory.h"
+#include "GameDisplay.h"
 
-PlayerHand::PlayerHand(ALLEGRO_FONT *font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory *card_factory)
+PlayerHand::PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory &card_factory)
+	:font{font}, color{color}, x{x}, y{y}
 {
-	this->font = font;
-	this->color = color;
-	this->x = x;
-	this->y = y;
-	int i;
-	int real_x;
-	int card_width = (Card::CARD_BORDER_WIDTH * 2) + Card::CARD_W;
-	for (i = 0; i < 5; i++) {
-		real_x = this->x + (i * (card_width + 10));
-		Card *card = card_factory->create_card();
-		card->set_font(font);
-		card->set_gamedisplay(gamedisplay);
-		card->set_color(this->color);
-		card->set_pos(real_x, this->y);
-		this->cards.push_back(card);
+	int i = 0, card_width = Card::CARD_BORDER_WIDTH * 2 + Card::CARD_W;
+	for (auto &c : cards) {
+		c = std::unique_ptr<Card>{card_factory.create_card()};
+		c->set_font(font);
+		c->set_gamedisplay(gamedisplay);
+		c->set_color(color);
+		c->set_pos(x + i++ * (card_width + 10), y);
 	}
-}
-
-
-PlayerHand::~PlayerHand()
-{
 }
 
 void PlayerHand::draw()
 {
-	std::vector<Card *>::iterator it;
-	for (it = this->cards.begin(); it < this->cards.end(); it++) {
-		Card *card = *it;
-		card->draw();
+	for (auto &c : cards) {
+		c->draw();
 	}
 }
