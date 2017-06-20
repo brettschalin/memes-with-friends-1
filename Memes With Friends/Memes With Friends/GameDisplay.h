@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdio.h>
 #include <allegro5/allegro.h>
 #include <tuple>
 
@@ -13,6 +12,9 @@ private:
 	ALLEGRO_DISPLAY *display = NULL;
 public:
 	GameDisplay();
+	// This class can't be copied
+	GameDisplay(const GameDisplay &) = delete;
+	GameDisplay &operator=(const GameDisplay &) = delete;
 	~GameDisplay();
 	bool valid_display();
 	int get_font_size();
