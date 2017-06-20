@@ -2,6 +2,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "Card.h"
 
