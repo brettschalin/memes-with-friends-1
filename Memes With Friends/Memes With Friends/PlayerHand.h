@@ -16,11 +16,13 @@ protected:
 	ALLEGRO_COLOR color;
 	int x;
 	int y;
-	std::array<std::unique_ptr<Card>, 5> cards;
+	std::vector<std::shared_ptr<Card>> cards;
 public:
-	PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, ALLEGRO_COLOR color, int x, int y, CardFactory &card_factory);
+	PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, ALLEGRO_COLOR init_color, int x, int y, CardFactory &card_factory);
 	// This class can't be copied
 	PlayerHand(const PlayerHand &) = delete;
 	PlayerHand &operator=(const PlayerHand &) = delete;
 	void draw();
+	Card* get_card(int index);
+	void remove_card(int index);
 };

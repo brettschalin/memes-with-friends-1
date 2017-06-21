@@ -132,7 +132,7 @@ int main(void)
 	int sx = 0, sy = 0;
 
 	//Testing and example usage for the GameManager class
-	GameManager game = GameManager();
+	GameManager game = GameManager(font, &gamedisplay);
 	int currentPlayer = game.get_current_player();
 	game.play_card(game.draw_card_from_hand(3), 0, 0);
 	int testdown = (*game.get_card(0, 0)).get_down();
@@ -144,9 +144,9 @@ int main(void)
 		std::cout << "Either card comparisons or card placement is broken." << std::endl;
 	}
 
-	int player1Score = game.get_score(0);
-	int player2Score = game.get_score(1);
-	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
+//	int player1Score = game.get_score(0);
+//	int player2Score = game.get_score(1);
+//	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
 	delete &game;
 

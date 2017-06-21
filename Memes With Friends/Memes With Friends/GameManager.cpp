@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager()
+GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay)
 {
 
 	//Set colors. Player 1 is red, Player 2 is blue
@@ -9,31 +9,17 @@ GameManager::GameManager()
 	data.colors.push_back(red);
 	data.colors.push_back(blue);
 
-	//Initialize score array. Players start with their own cards,
-	//and -1 doesn't belong to any player.
-	for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
-	{
-		data.cards_by_player[i] = new int[HANDSIZE];
-		std::fill_n(data.cards_by_player[i], HANDSIZE, i);
-	}
-	data.cards_by_player[NUMBER_OF_PLAYERS + 1] = new int[BOARDSIZE*BOARDSIZE];
-	std::fill_n(data.cards_by_player[NUMBER_OF_PLAYERS + 1], BOARDSIZE*BOARDSIZE, -1);
-
 
 	//Assign who's first to play
 	int curr_player = (rand() % 2);
 	set_current_player(curr_player);
 
-	//Initialize everyone's hand...
-	for (int i = 0; i < 2; i++)
-	{
-		for (int j = 0; j < HANDSIZE; j++)
-		{
-			data.player_cards[i][j] = card_factory.create_card();
-		}
-	}
+	//initialize player hands
+	data.player1Cards = new Player1Hand(font, gamedisplay, card_factory);
+	data.player2Cards = new Player2Hand(font, gamedisplay, card_factory);
 
-	//...and the board
+
+	//initialize the board
 	for (int i = 0; i < BOARDSIZE; i++)
 	{
 		for (int j = 0; j < BOARDSIZE; j++)
@@ -46,13 +32,6 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
-	for (int i = 0; i < HANDSIZE; i++)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			delete data.player_cards[j][i];
-		}
-	}
 
 	for (int i = 0; i < BOARDSIZE; i++)
 	{
@@ -62,10 +41,8 @@ GameManager::~GameManager()
 		}
 	}
 
-	for (int i = 0; i <= NUMBER_OF_PLAYERS; i++)
-	{
-		delete data.cards_by_player[i];
-	}
+	delete data.player1Cards;
+	delete data.player2Cards;
 	delete &card_factory;
 	delete &data;
 
@@ -89,7 +66,6 @@ void GameManager::play_card(Card* card, int x, int y)
 {
 	
 	data.board[x][y] = card;
-	data.cards_by_player[NUMBER_OF_PLAYERS][x*BOARDSIZE + y] = data.current_player;
 
 	
 
@@ -99,7 +75,9 @@ void GameManager::play_card(Card* card, int x, int y)
 	{
 		for (int dy = -1; dy < 2; dy++)
 		{
+			//don't check out of bounds, or the card itself
 			if (!in_bounds(x + dx, y + dy)) continue;
+			if (dx == 0 && dy == 0) continue;
 
 			Card* other = get_card(x + dx, y + dy);
 			if (other == NULL) continue;
@@ -137,7 +115,6 @@ void GameManager::play_card(Card* card, int x, int y)
 			{
 
 				(*other).set_color(data.colors[data.current_player]);
-				data.cards_by_player[NUMBER_OF_PLAYERS][(x+dx)*BOARDSIZE + (y+dy)] = data.current_player;
 				switch_color = false;
 
 
@@ -165,24 +142,24 @@ Card* GameManager::get_card(int x, int y)
 Card* GameManager::draw_card_from_hand(int index)
 {
 	int curr = data.current_player;
-	Card* out = data.player_cards[curr][index];
-	data.player_cards[curr][index] = NULL;
-	
-	int i = 0;
-	
-	while (data.player_cards[curr][i] != NULL && i < HANDSIZE)
+
+	Card* out = NULL;
+	if (curr == 0)
 	{
-		data.player_cards[curr][i - 1] = data.player_cards[curr][i];
-		i++;
+		out = data.player1Cards->get_card(index);
+		data.player1Cards->remove_card(index);
 	}
-	if (i == 0) i = 1; //make sure there's no indexing errors
-	data.player_cards[curr][i-1] = NULL;
-	data.cards_by_player[curr][i-1] = -1;
+	else
+	{
+		out = data.player2Cards->get_card(index);
+		data.player2Cards->remove_card(index);
+	}
 
 	return out;
 
 }
 
+/*
 int GameManager::get_score(int player)
 {
 	int score = 0;
@@ -206,3 +183,4 @@ int GameManager::get_score(int player)
 	return score;
 
 }
+*/
