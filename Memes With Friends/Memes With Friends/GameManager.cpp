@@ -106,21 +106,21 @@ void GameManager::play_card(Card* card, int x, int y)
 
 			if (dx == -1 && dy == 0)
 			{
-				if ((*card).compare_to_left(other))
+				if ((*card).compare_to_left(*other))
 				{
 					switch_color = true;
 				}
 			}
 			if (dx == 1 && dy == 0)
 			{
-				if ((*card).compare_to_right(other))
+				if ((*card).compare_to_right(*other))
 				{
 					switch_color = true;
 				}
 			}
 			if (dx == 0 && dy == 1)
 			{
-				if ((*card).compare_to_up(other))
+				if ((*card).compare_to_up(*other))
 				{
 					switch_color = true;
 				}
@@ -128,7 +128,7 @@ void GameManager::play_card(Card* card, int x, int y)
 
 			if (dx == 0 && dy == -1)
 			{
-				if ((*card).compare_to_down(other))
+				if ((*card).compare_to_down(*other))
 				{
 					switch_color = true;
 				}
