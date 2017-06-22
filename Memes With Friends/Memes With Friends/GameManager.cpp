@@ -37,12 +37,13 @@ GameManager::~GameManager()
 	{
 		for (int j = 0; j < BOARDSIZE; j++)
 		{
-			delete data.board[j][i];
+			data.board[j][i] = NULL;
 		}
 	}
-	/*
+
 	delete data.player1Cards;
 	delete data.player2Cards;
+	/*
 	delete &card_factory;
 	delete &data;
 	*/
