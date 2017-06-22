@@ -30,14 +30,14 @@ void PlayerHand::draw()
 	}
 }
 
-Card* PlayerHand::get_card(int index)
+Card* PlayerHand::get_card(unsigned int index)
 {
 	if (index < 0 || index >= cards.size()) return NULL;
 
 	return cards[index].get();
 }
 
-void PlayerHand::remove_card(int index)
+void PlayerHand::remove_card(unsigned int index)
 {
 	if (index < 0 || index >= cards.size()) return;
 

@@ -148,7 +148,7 @@ int main(void)
 //	int player2Score = game.get_score(1);
 //	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
-	delete &game;
+//	delete &game;
 
 
 

@@ -40,11 +40,12 @@ GameManager::~GameManager()
 			delete data.board[j][i];
 		}
 	}
-
+	/*
 	delete data.player1Cards;
 	delete data.player2Cards;
 	delete &card_factory;
 	delete &data;
+	*/
 
 }
 

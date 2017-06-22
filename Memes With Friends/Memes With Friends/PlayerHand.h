@@ -23,6 +23,6 @@ public:
 	PlayerHand(const PlayerHand &) = delete;
 	PlayerHand &operator=(const PlayerHand &) = delete;
 	void draw();
-	Card* get_card(int index);
-	void remove_card(int index);
+	Card* get_card(unsigned int index);
+	void remove_card(unsigned int index);
 };
