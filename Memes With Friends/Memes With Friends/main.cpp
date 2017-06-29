@@ -144,11 +144,10 @@ int main(void)
 		std::cout << "Either card comparisons or card placement is broken." << std::endl;
 	}
 
-//	int player1Score = game.get_score(0);
-//	int player2Score = game.get_score(1);
-//	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
+	int player1Score = game.get_score(0);
+	int player2Score = game.get_score(1);
+	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
-//	delete &game;
 
 
 

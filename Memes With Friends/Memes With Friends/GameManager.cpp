@@ -19,12 +19,13 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
 	data.player2Cards = new Player2Hand(font, gamedisplay, card_factory);
 
 
-	//initialize the board
+	//initialize the board and scorekeeper
 	for (int i = 0; i < BOARDSIZE; i++)
 	{
 		for (int j = 0; j < BOARDSIZE; j++)
 		{
 			data.board[i][j] = NULL;
+			data.scores[i*BOARDSIZE + j] = -1;
 		}
 	}
 
@@ -64,11 +65,11 @@ void GameManager::set_current_player(int player)
 /*Only implements the game logic. Anything with animations or display is left to other functions.
 Assumes that a valid move is played
 */
-void GameManager::play_card(Card* card, int x, int y)
+void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 {
 	
 	data.board[x][y] = card;
-
+	data.scores[x*BOARDSIZE + y] = data.current_player;
 	
 
 	bool switch_color = false;
@@ -81,7 +82,7 @@ void GameManager::play_card(Card* card, int x, int y)
 			if (!in_bounds(x + dx, y + dy)) continue;
 			if (dx == 0 && dy == 0) continue;
 
-			Card* other = get_card(x + dx, y + dy);
+			std::shared_ptr<Card> other = get_card(x + dx, y + dy);
 			if (other == NULL) continue;
 
 			if (dx == -1 && dy == 0)
@@ -133,7 +134,7 @@ bool GameManager::in_bounds(int x, int y)
 }
 
 
-Card* GameManager::get_card(int x, int y)
+std::shared_ptr<Card> GameManager::get_card(int x, int y)
 {
 
 	return data.board[x][y];
@@ -141,11 +142,11 @@ Card* GameManager::get_card(int x, int y)
 }
 
 //Removes a card from the hand and returns it.
-Card* GameManager::draw_card_from_hand(int index)
+std::shared_ptr<Card> GameManager::draw_card_from_hand(int index)
 {
 	int curr = data.current_player;
 
-	Card* out = NULL;
+	std::shared_ptr<Card> out = NULL;
 	if (curr == 0)
 	{
 		out = data.player1Cards->get_card(index);
@@ -161,28 +162,28 @@ Card* GameManager::draw_card_from_hand(int index)
 
 }
 
-/*
+
 int GameManager::get_score(int player)
 {
-	int score = 0;
-	for (int outer = 0; outer <= NUMBER_OF_PLAYERS; outer++)
+
+	int score;
+	if (player != 0)
 	{
-		for (int inner = 0; inner < HANDSIZE; inner++)
-		{
-			if (data.cards_by_player[outer][inner] == player)
-			{
-				score++;
-			}
-		}
+		score = data.player2Cards->hand_size();
 	}
+	else
+	{
+		score = data.player1Cards->hand_size();
+	}
+
 	for (int i = 0; i < BOARDSIZE*BOARDSIZE; i++)
 	{
-		if (data.cards_by_player[NUMBER_OF_PLAYERS][i] == player)
+		if (data.scores[i] == player)
 		{
 			score++;
 		}
 	}
-	return score;
 
+	
+	return score;
 }
-*/

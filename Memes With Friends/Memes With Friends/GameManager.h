@@ -17,8 +17,9 @@ struct gameData
 	//Card* player_cards[NUMBER_OF_PLAYERS][HANDSIZE];
 	Player1Hand* player1Cards;
 	Player2Hand* player2Cards;
+	std::shared_ptr<Card> board[BOARDSIZE][BOARDSIZE];
 
-	Card* board[BOARDSIZE][BOARDSIZE];
+	int scores[BOARDSIZE*BOARDSIZE];
 
 };
 
@@ -33,11 +34,11 @@ public:
 	~GameManager();
 	int get_current_player();
 	void set_current_player(int player);
-	void play_card(Card* card, int x, int y);
-	Card* get_card(int x, int y);
-	Card* draw_card_from_hand(int index);
+	void play_card(std::shared_ptr<Card> card, int x, int y);
+	std::shared_ptr<Card> get_card(int x, int y);
+	std::shared_ptr<Card> draw_card_from_hand(int index);
 	bool in_bounds(int x, int y);
-	//int get_score(int player);
+	int get_score(int player);
 
 
 };

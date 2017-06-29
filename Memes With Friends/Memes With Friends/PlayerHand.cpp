@@ -30,18 +30,23 @@ void PlayerHand::draw()
 	}
 }
 
-Card* PlayerHand::get_card(unsigned int index)
+std::shared_ptr<Card> PlayerHand::get_card(size_t index)
 {
 	if (index < 0 || index >= cards.size()) return NULL;
 
-	return cards[index].get();
+	return cards[index];
 }
 
-void PlayerHand::remove_card(unsigned int index)
+void PlayerHand::remove_card(size_t index)
 {
 	if (index < 0 || index >= cards.size()) return;
 
 	cards.erase(cards.begin()+index);
 
+}
+
+size_t PlayerHand::hand_size()
+{
+	return cards.size();
 }
 
