@@ -18,6 +18,7 @@
 #include "PlayerHand.h"
 #include "Player1Hand.h"
 #include "Player2Hand.h"
+#include "GameManager.h"
 #include "CardFactory.h"
 
 #ifndef DATADIR
@@ -129,6 +130,31 @@ int main(void)
 
 	int mouse_x = 0, mouse_y = 0;
 	int sx = 0, sy = 0;
+
+	//Testing and example usage for the GameManager class
+	GameManager game = GameManager(font, &gamedisplay);
+	int currentPlayer = game.get_current_player();
+	game.play_card(game.draw_card_from_hand(3), 0, 0);
+	int testdown = (*game.get_card(0, 0)).get_down();
+	game.set_current_player(!currentPlayer);
+	game.play_card(game.draw_card_from_hand(2), 0, 1);
+	int testup = (*game.get_card(0, 1)).get_up();
+	if (!((testdown > testup) == (*game.get_card(0,0)).compare_to_down(*game.get_card(0, 1))))
+	{
+		std::cout << "Either card comparisons or card placement is broken." << std::endl;
+	}
+
+	int player1Score = game.get_score(0);
+	int player2Score = game.get_score(1);
+	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
+
+
+
+
+
+
+
+
 
 	bool redraw = true;
 

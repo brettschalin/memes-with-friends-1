@@ -149,6 +149,7 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardFactory.cpp" />
     <ClCompile Include="GameDisplay.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player1Hand.cpp" />
     <ClCompile Include="Player2Hand.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardFactory.h" />
     <ClInclude Include="GameDisplay.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Player1Hand.h" />
     <ClInclude Include="Player2Hand.h" />
     <ClInclude Include="PlayerHand.h" />
