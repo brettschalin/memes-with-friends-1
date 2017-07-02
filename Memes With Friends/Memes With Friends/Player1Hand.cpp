@@ -16,5 +16,5 @@ void Player1Hand::draw()
 	PlayerHand::draw();
 	al_draw_text(font.get(), al_map_rgb(255, 0, 0),
 		     x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 10,
-		     ALLEGRO_ALIGN_LEFT, "Player 1");
+		     ALLEGRO_ALIGN_LEFT, "Computer");
 }
