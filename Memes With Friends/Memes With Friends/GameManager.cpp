@@ -119,7 +119,7 @@ void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 
 				(*other).set_color(data.colors[data.current_player]);
 				switch_color = false;
-
+				data.scores[(x + dx)*BOARDSIZE + (y + dy)] = data.current_player;
 
 			}
 		}
