@@ -150,19 +150,28 @@
     <ClCompile Include="CardFactory.cpp" />
     <ClCompile Include="GameDisplay.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Player1Hand.cpp" />
     <ClCompile Include="Player2Hand.cpp" />
     <ClCompile Include="PlayerHand.cpp" />
+    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardFactory.h" />
     <ClInclude Include="GameDisplay.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Player1Hand.h" />
     <ClInclude Include="Player2Hand.h" />
     <ClInclude Include="PlayerHand.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="MenuButton.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

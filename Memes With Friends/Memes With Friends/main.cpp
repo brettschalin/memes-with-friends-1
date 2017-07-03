@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <stack>
 
 #include "Card.h"
 #include "GameDisplay.h"
@@ -20,12 +21,17 @@
 #include "Player2Hand.h"
 #include "GameManager.h"
 #include "CardFactory.h"
+#include "State.h"
+#include "GameState.h"
+#include "MenuState.h"
 
 #ifndef DATADIR
 #define DATADIR "./"
 #endif
 
 const float FPS = 60;
+
+std::stack<std::unique_ptr<State>> statemachine;
 
 /*
  * Makeshift scope guard to make sure PHYSFS_deinit happens AFTER all our fonts
@@ -88,6 +94,12 @@ int main(void)
 	};
 	if (!font) return init_error("font (pirulen.ttf)");
 
+    std::shared_ptr<ALLEGRO_FONT> menufont{
+        al_load_ttf_font("pirulen.ttf", 48, 0),
+        &al_destroy_font
+    };
+    if (!menufont) return init_error("font (pirulen.ttf)");
+
 	std::unique_ptr<ALLEGRO_EVENT_QUEUE, decltype(&al_destroy_event_queue)> event_queue{
 		al_create_event_queue(),
 		&al_destroy_event_queue
@@ -148,13 +160,7 @@ int main(void)
 	int player2Score = game.get_score(1);
 	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
-
-
-
-
-
-
-
+    statemachine.push(std::make_unique<MenuState>());
 
 	bool redraw = true;
 
@@ -178,17 +184,25 @@ int main(void)
 			case ALLEGRO_KEY_D:
 				debug = !debug; // toggle debug state
 				break;
-			case ALLEGRO_KEY_ESCAPE:
-				doexit = true;
-				break;
 			}
 		}
+
+        PROCESS_CODE pcode = statemachine.top()->process(ev, &gamedisplay);
+
+        if (pcode == PROCESS_CODE::QUIT) {
+            doexit = true;
+            break;
+        }
 
 		if (redraw && al_is_event_queue_empty(event_queue.get())) {
 
 			redraw = false;
 
 			gamedisplay.clear_display();
+
+            statemachine.top()->draw(menufont, &gamedisplay);
+
+            /*
 
 			p1hand.draw();
 			p2hand.draw();
@@ -204,6 +218,8 @@ int main(void)
 
 			// draw help text
 			al_draw_multiline_text(font.get(), al_map_rgb(0, 0, 0), 10, 1040, 500, 0, ALLEGRO_ALIGN_LEFT, "Press D to toggle DEBUG info\nPress ESC to exit");
+
+            */
 
 			al_flip_display();
 
