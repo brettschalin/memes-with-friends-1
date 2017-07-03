@@ -30,11 +30,11 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         switch (ev.mouse.button) {
             case 1:
                 // left button
-                if (playbutton->contains(mouse)) {
+                if (playbutton->is_enabled() && playbutton->contains(mouse)) {
                     std::cout << "Play clicked" << std::endl;
-                } else if (creditsbutton->contains(mouse)) {
+                } else if (creditsbutton->is_enabled() && creditsbutton->contains(mouse)) {
                     std::cout << "Credits clicked" << std::endl;
-                } else if (quitbutton->contains(mouse)) {
+                } else if (quitbutton->is_enabled() && quitbutton->contains(mouse)) {
                     std::cout << "Quit clicked" << std::endl;
                     return PROCESS_CODE::QUIT;
                 }
