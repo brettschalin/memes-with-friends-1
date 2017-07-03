@@ -11,10 +11,12 @@ private:
     std::unique_ptr<MenuButton> playbutton;
     std::unique_ptr<MenuButton> creditsbutton;
     std::unique_ptr<MenuButton> quitbutton;
+    std::shared_ptr<ALLEGRO_FONT> font;
+    bool initialized = false;
     bool pause;
 public:
-    MenuState();
+    virtual void enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) final;
     virtual PROCESS_CODE process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) final;
-    virtual void draw(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) final;
+    virtual void draw(GameDisplay *gamedisplay) final;
     void set_pause(bool pause);
 };

@@ -7,7 +7,9 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 
-MenuState::MenuState() {
+void MenuState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) {
+    if (initialized) return;
+
     playbutton = std::make_unique<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 200, 400, 100);
     playbutton->set_text("Play");
 
@@ -18,6 +20,9 @@ MenuState::MenuState() {
     quitbutton->set_text("Quit");
 
     set_pause(false);
+
+    this->font = font;
+    initialized = true;
 }
 
 PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
@@ -39,6 +44,7 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
                     switchstate(GAMESTATE::GAMESTATE);
                 } else if (creditsbutton->is_enabled() && creditsbutton->contains(mouse)) {
                     std::cout << "Credits clicked" << std::endl;
+                    switchstate(GAMESTATE::CREDITSSTATE);
                 } else if (quitbutton->is_enabled() && quitbutton->contains(mouse)) {
                     std::cout << "Quit clicked" << std::endl;
                     return PROCESS_CODE::QUIT;
@@ -54,11 +60,11 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     return PROCESS_CODE::OK;
 }
 
-void MenuState::draw(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) {
+void MenuState::draw(GameDisplay *gamedisplay) {
     al_draw_text(font.get(), al_map_rgb(0, 0, 0), GameDisplay::SCREEN_W / 2, playbutton->get_y1() - 100, ALLEGRO_ALIGN_CENTER, "MEMES WITH FRIENDS");
-    playbutton->draw(font, gamedisplay);
-    creditsbutton->draw(font, gamedisplay);
-    quitbutton->draw(font, gamedisplay);
+    playbutton->draw(this->font, gamedisplay);
+    creditsbutton->draw(this->font, gamedisplay);
+    quitbutton->draw(this->font, gamedisplay);
 }
 
 void MenuState::set_pause(bool pause) {

@@ -15,7 +15,8 @@ protected:
     State() {};
 public:
     virtual ~State() {};
+    virtual void enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) = 0;
     virtual PROCESS_CODE process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) = 0;
-    virtual void draw(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) = 0;
+    virtual void draw(GameDisplay *gamedisplay) = 0;
 };
 
