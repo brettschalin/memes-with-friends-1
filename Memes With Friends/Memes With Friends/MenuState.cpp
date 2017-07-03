@@ -50,6 +50,7 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
 }
 
 void MenuState::draw(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) {
+    al_draw_text(font.get(), al_map_rgb(0, 0, 0), GameDisplay::SCREEN_W / 2, playbutton->get_y1() - 100, ALLEGRO_ALIGN_CENTER, "MEMES WITH FRIENDS");
     playbutton->draw(font, gamedisplay);
     creditsbutton->draw(font, gamedisplay);
     quitbutton->draw(font, gamedisplay);
