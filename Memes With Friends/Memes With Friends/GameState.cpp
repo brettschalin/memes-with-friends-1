@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include "main.h"
 
 PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     if (ev.type == ALLEGRO_EVENT_KEY_UP) {
@@ -8,6 +9,7 @@ PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
                 break;
             case ALLEGRO_KEY_ESCAPE:
                 // return to menustate
+                switchstate(GAMESTATE::PAUSESTATE);
                 break;
         }
     }

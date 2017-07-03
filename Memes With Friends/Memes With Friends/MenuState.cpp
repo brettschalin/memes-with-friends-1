@@ -2,6 +2,7 @@
 #include "GameDisplay.h"
 #include "MenuButton.h"
 #include "Point.h"
+#include "main.h"
 #include <iostream>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
@@ -15,6 +16,8 @@ MenuState::MenuState() {
 
     quitbutton = std::make_unique<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 100, 400, 100);
     quitbutton->set_text("Quit");
+
+    set_pause(false);
 }
 
 PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
@@ -31,7 +34,9 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
             case 1:
                 // left button
                 if (playbutton->is_enabled() && playbutton->contains(mouse)) {
-                    std::cout << "Play clicked" << std::endl;
+                    if (!pause) std::cout << "Play clicked" << std::endl;
+                    else std::cout << "Resume clicked" << std::endl;
+                    switchstate(GAMESTATE::GAMESTATE);
                 } else if (creditsbutton->is_enabled() && creditsbutton->contains(mouse)) {
                     std::cout << "Credits clicked" << std::endl;
                 } else if (quitbutton->is_enabled() && quitbutton->contains(mouse)) {
@@ -54,4 +59,10 @@ void MenuState::draw(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispla
     playbutton->draw(font, gamedisplay);
     creditsbutton->draw(font, gamedisplay);
     quitbutton->draw(font, gamedisplay);
+}
+
+void MenuState::set_pause(bool pause) {
+    this->pause = pause;
+    if (pause) playbutton->set_text("Resume");
+    else playbutton->set_text("Play");
 }

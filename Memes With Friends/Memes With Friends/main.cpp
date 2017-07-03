@@ -24,6 +24,7 @@
 #include "State.h"
 #include "GameState.h"
 #include "MenuState.h"
+#include "main.h"
 
 #ifndef DATADIR
 #define DATADIR "./"
@@ -32,6 +33,25 @@
 const float FPS = 60;
 
 std::stack<std::unique_ptr<State>> statemachine;
+GAMESTATE gamestate;
+
+void switchstate(GAMESTATE newstate) {
+    switch (newstate) {
+        case GAMESTATE::MENUSTATE:
+            statemachine.push(std::make_unique<MenuState>());
+            break;
+        case GAMESTATE::GAMESTATE:
+            if (gamestate == GAMESTATE::PAUSESTATE) statemachine.pop();
+            else statemachine.push(std::make_unique<GameState>());
+            break;
+        case GAMESTATE::PAUSESTATE:
+            statemachine.push(std::make_unique<MenuState>());
+            ((MenuState *)statemachine.top().get())->set_pause(true);
+            break;
+    }
+
+    gamestate = newstate;
+}
 
 /*
  * Makeshift scope guard to make sure PHYSFS_deinit happens AFTER all our fonts
@@ -160,7 +180,7 @@ int main(void)
 	int player2Score = game.get_score(1);
 	std::cout << "Scores: " << player1Score << ", " << player2Score << std::endl;
 
-    statemachine.push(std::make_unique<MenuState>());
+    switchstate(GAMESTATE::MENUSTATE);
 
 	bool redraw = true;
 
