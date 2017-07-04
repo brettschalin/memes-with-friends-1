@@ -11,7 +11,7 @@ CXXFLAGS = -std=c++11 -O2 -flto $(WARNINGS) -MMD -MP \
 LDFLAGS = -Wl,--as-needed -O2 -flto
 LDLIBS = $(shell $(PKG_CONFIG) --libs $(LIBS)) -lphysfs
 
-OBJ := main.o Card.o GameDisplay.o CardFactory.o PlayerHand.o Player1Hand.o Player2Hand.o GameManager.o
+OBJ := main.o Card.o GameDisplay.o CardFactory.o PlayerHand.o Player1Hand.o Player2Hand.o GameManager.o Point.o CreditsState.o MenuButton.o MenuState.o GameState.o
 
 all: $(PROG)
 $(PROG): $(OBJ)
