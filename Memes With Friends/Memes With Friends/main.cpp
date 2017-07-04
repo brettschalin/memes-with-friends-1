@@ -24,6 +24,7 @@
 #include "State.h"
 #include "GameState.h"
 #include "MenuState.h"
+#include "CreditsState.h"
 #include "main.h"
 
 #ifndef DATADIR
@@ -49,9 +50,12 @@ int switchstate(GAMESTATE newstate) {
     switch (newstate) {
         case GAMESTATE::MENUSTATE:
         {
-            auto ms = std::make_shared<MenuState>();
-            ms->enter(font, g_gamedisplay);
-            statemachine.push(ms);
+            if (gamestate == GAMESTATE::CREDITSSTATE) statemachine.pop();
+            else {
+                auto ms = std::make_shared<MenuState>();
+                ms->enter(font, g_gamedisplay);
+                statemachine.push(ms);
+            }
         }
             break;
         case GAMESTATE::GAMESTATE:
@@ -74,6 +78,9 @@ int switchstate(GAMESTATE newstate) {
             break;
         case GAMESTATE::CREDITSSTATE:
         {
+            auto cs = std::make_shared<CreditsState>();
+            cs->enter(font, g_gamedisplay);
+            statemachine.push(cs);
         }
             break;
     }
