@@ -21,7 +21,7 @@ GameDisplay::GameDisplay()
 	float sx = windowWidth / (float)screenWidth;
 	float sy = windowHeight / (float)screenHeight;
 
-	if ((sx < 0.0f) || (sy < 0.0f)) {
+	if ((sx < 1.0f) || (sy < 1.0f)) {
 		fontsize = 16;
 	} else {
 		fontsize = 12;

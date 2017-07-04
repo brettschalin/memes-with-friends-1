@@ -91,7 +91,7 @@ void GameState::draw(GameDisplay *gamedisplay) {
         std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(*test_card2.get()) ? "True" : "False");
         std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
         std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
-        al_draw_multiline_text(this->font.get(), al_map_rgb(0, 0, 0), 10, 10, 700, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
+        al_draw_multiline_text(this->font.get(), al_map_rgb(0, 0, 0), 10, 10, GameDisplay::SCREEN_W - 10, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
     }
 
     // draw help text
