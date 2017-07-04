@@ -154,9 +154,9 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
-    <ClCompile Include="Player1Hand.cpp" />
-    <ClCompile Include="Player2Hand.cpp" />
+    <ClCompile Include="ComputerHand.cpp" />
     <ClCompile Include="PlayerHand.cpp" />
+    <ClCompile Include="CardHand.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="MenuButton.cpp" />
   </ItemGroup>
@@ -169,9 +169,9 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MenuState.h" />
-    <ClInclude Include="Player1Hand.h" />
-    <ClInclude Include="Player2Hand.h" />
+    <ClInclude Include="ComputerHand.h" />
     <ClInclude Include="PlayerHand.h" />
+    <ClInclude Include="CardHand.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="State.h" />

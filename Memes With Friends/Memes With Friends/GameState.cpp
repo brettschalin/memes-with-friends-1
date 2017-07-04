@@ -49,6 +49,8 @@ PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
 
 void GameState::draw(GameDisplay *gamedisplay) {
 
+    gamemanager->draw();
+
     if (debug) {
         // if debug is toggled on, draw debug information above everything else
         std::string mouse_pos = "Mouse: (" + std::to_string(mousex) + ", " + std::to_string(mousey) + ")";

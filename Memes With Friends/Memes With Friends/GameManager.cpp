@@ -15,9 +15,9 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
 	set_current_player(curr_player);
 
 	//initialize player hands
-	data.player1Cards = new Player1Hand(font, gamedisplay, card_factory);
-	data.player2Cards = new Player2Hand(font, gamedisplay, card_factory);
-
+    card_factory = std::make_shared<CardFactory>();
+    data.computerCards = std::make_shared<ComputerHand>(font, gamedisplay, *card_factory);
+    data.playerCards = std::make_shared<PlayerHand>(font, gamedisplay, *card_factory);
 
 	//initialize the board and scorekeeper
 	for (int i = 0; i < BOARDSIZE; i++)
@@ -41,13 +41,6 @@ GameManager::~GameManager()
 			data.board[j][i] = NULL;
 		}
 	}
-
-	delete data.player1Cards;
-	delete data.player2Cards;
-	/*
-	delete &card_factory;
-	delete &data;
-	*/
 
 }
 
@@ -149,13 +142,13 @@ std::shared_ptr<Card> GameManager::draw_card_from_hand(int index)
 	std::shared_ptr<Card> out = NULL;
 	if (curr == 0)
 	{
-		out = data.player1Cards->get_card(index);
-		data.player1Cards->remove_card(index);
+		out = data.computerCards->get_card(index);
+		data.computerCards->remove_card(index);
 	}
 	else
 	{
-		out = data.player2Cards->get_card(index);
-		data.player2Cards->remove_card(index);
+		out = data.playerCards->get_card(index);
+		data.playerCards->remove_card(index);
 	}
 
 	return out;
@@ -169,11 +162,11 @@ int GameManager::get_score(int player)
 	int score;
 	if (player != 0)
 	{
-		score = data.player2Cards->hand_size();
+		score = data.playerCards->hand_size();
 	}
 	else
 	{
-		score = data.player1Cards->hand_size();
+		score = data.computerCards->hand_size();
 	}
 
 	for (int i = 0; i < BOARDSIZE*BOARDSIZE; i++)
@@ -186,4 +179,9 @@ int GameManager::get_score(int player)
 
 	
 	return score;
+}
+
+void GameManager::draw() {
+    data.playerCards->draw();
+    data.computerCards->draw();
 }
