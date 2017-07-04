@@ -37,6 +37,11 @@ std::stack<std::shared_ptr<State>> statemachine;
 GAMESTATE gamestate;
 GameDisplay *g_gamedisplay;
 
+static int init_error(std::string message) {
+    std::cerr << "failed to initialize " << message << "\n";
+    return EXIT_FAILURE;
+}
+
 int switchstate(GAMESTATE newstate) {
 
     int fontsize = g_gamedisplay->get_font_size();
@@ -98,12 +103,6 @@ struct PhysFS {
 	PhysFS() { PHYSFS_init(NULL); }
 	~PhysFS() { PHYSFS_deinit(); }
 };
-
-static int init_error(std::string message)
-{
-	std::cerr << "failed to initialize " << message << "\n";
-	return EXIT_FAILURE;
-}
 
 int main(void)
 {

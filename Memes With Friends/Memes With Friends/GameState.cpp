@@ -62,6 +62,13 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
 }
 
 PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    int mouse_x = 0, mouse_y = 0;
+    int sx = 0, sy = 0;
+
+    mouse_x = ev.mouse.x;
+    mouse_y = ev.mouse.y;
+    std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
+
     if (ev.type == ALLEGRO_EVENT_KEY_UP) {
         switch (ev.keyboard.keycode) {
             case ALLEGRO_KEY_D:
@@ -73,8 +80,8 @@ PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
                 break;
         }
     } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
-        mousex = ev.mouse.x;
-        mousey = ev.mouse.y;
+        mousex = sx;
+        mousey = sy;
     }
 
     return PROCESS_CODE::OK;
@@ -86,10 +93,8 @@ void GameState::draw(GameDisplay *gamedisplay) {
 
     if (debug) {
         // if debug is toggled on, draw debug information above everything else
-        int sx, sy;
-        std::tie(sx, sy) = gamedisplay->convert_coordinates(mousex, mousey);
-        std::string mouse_pos_x = "Mouse X: " + std::to_string(sx) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(*test_card2.get()) ? "True" : "False");
-        std::string mouse_pos_y = "Mouse Y: " + std::to_string(sy) + "    Card 2 U: " + std::to_string(test_card2->get_up());
+        std::string mouse_pos_x = "Mouse X: " + std::to_string(mousex) + "    Card 1 D: " + std::to_string(test_card->get_down()) + "    Card 1 turns Card 2: " + (test_card->compare_to_down(*test_card2.get()) ? "True" : "False");
+        std::string mouse_pos_y = "Mouse Y: " + std::to_string(mousey) + "    Card 2 U: " + std::to_string(test_card2->get_up());
         std::string mouse_pos = mouse_pos_x + "\n" + mouse_pos_y;
         al_draw_multiline_text(this->font.get(), al_map_rgb(0, 0, 0), 10, 10, GameDisplay::SCREEN_W - 10, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
     }

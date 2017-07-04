@@ -11,5 +11,4 @@ enum class GAMESTATE {
 };
 
 int switchstate(GAMESTATE newstate);
-static int init_error(std::string message);
 int main(void);
