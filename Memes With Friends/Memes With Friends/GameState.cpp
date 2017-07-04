@@ -22,14 +22,14 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
 
     /* Test cards 1 and 2 are only for number testing at this time and is not displayed on screen. Will be removed shortly */
     Card *card1 = card_factory->create_card();
-    test_card = std::make_unique<Card>(*card1);
+    test_card = std::make_shared<Card>(*card1);
     test_card->set_font(font);
     test_card->set_gamedisplay(gamedisplay);
     test_card->set_color(al_map_rgb(255, 0, 0));
     test_card->set_pos(50, 50);
 
     Card *card2 = card_factory->create_card();
-    test_card2 = std::make_unique<Card>(*card2);
+    test_card2 = std::make_shared<Card>(*card2);
     test_card2->set_font(font);
     test_card2->set_gamedisplay(gamedisplay);
     test_card2->set_color(al_map_rgb(255, 0, 0));

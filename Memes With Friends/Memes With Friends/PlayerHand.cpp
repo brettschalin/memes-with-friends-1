@@ -14,7 +14,7 @@ PlayerHand::PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisp
 	cards.resize(5);
 	int i = 0, card_width = Card::CARD_BORDER_WIDTH * 2 + Card::CARD_W;
 	for (auto &c : cards) {
-		c = std::unique_ptr<Card>{card_factory.create_card()};
+		c = std::shared_ptr<Card>{card_factory.create_card()};
 		c->set_font(font);
 		c->set_gamedisplay(gamedisplay);
 		c->set_color(color);

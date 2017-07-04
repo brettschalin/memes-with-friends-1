@@ -10,13 +10,13 @@
 void MenuState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) {
     if (initialized) return;
 
-    playbutton = std::make_unique<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 200, 400, 100);
+    playbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 200, 400, 100);
     playbutton->set_text("Play");
 
-    creditsbutton = std::make_unique<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 50, 400, 100);
+    creditsbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 50, 400, 100);
     creditsbutton->set_text("Credits");
 
-    quitbutton = std::make_unique<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 100, 400, 100);
+    quitbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 100, 400, 100);
     quitbutton->set_text("Quit");
 
     set_pause(false);

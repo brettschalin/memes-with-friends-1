@@ -8,7 +8,7 @@
 class CreditsState :
     public State {
 private:
-    std::unique_ptr<MenuButton> backbutton;
+    std::shared_ptr<MenuButton> backbutton;
     std::shared_ptr<ALLEGRO_FONT> font;
     std::string credits;
     bool initialized = false;

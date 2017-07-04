@@ -18,8 +18,8 @@ private:
     std::shared_ptr<CardFactory> card_factory;
     std::shared_ptr<Player1Hand> p1hand;
     std::shared_ptr<Player2Hand> p2hand;
-    std::unique_ptr<Card> test_card;
-    std::unique_ptr<Card> test_card2;
+    std::shared_ptr<Card> test_card;
+    std::shared_ptr<Card> test_card2;
     std::shared_ptr<ALLEGRO_FONT> font;
 public:
     virtual void enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) final;

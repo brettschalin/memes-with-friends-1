@@ -8,9 +8,9 @@
 class MenuState :
     public State {
 private:
-    std::unique_ptr<MenuButton> playbutton;
-    std::unique_ptr<MenuButton> creditsbutton;
-    std::unique_ptr<MenuButton> quitbutton;
+    std::shared_ptr<MenuButton> playbutton;
+    std::shared_ptr<MenuButton> creditsbutton;
+    std::shared_ptr<MenuButton> quitbutton;
     std::shared_ptr<ALLEGRO_FONT> font;
     bool initialized = false;
     bool pause;

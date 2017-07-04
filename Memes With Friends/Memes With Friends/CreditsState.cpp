@@ -22,7 +22,7 @@ void CreditsState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     credits.append("Testing:\n\n");
     credits.append("/u/Killa-Byte\n");
 
-    backbutton = std::make_unique<MenuButton>(50, GameDisplay::SCREEN_H - 150, 400, 100);
+    backbutton = std::make_shared<MenuButton>(50, GameDisplay::SCREEN_H - 150, 400, 100);
     backbutton->set_text("<- Back");
 
     this->font = font;
