@@ -5,6 +5,7 @@
 #include <allegro5/allegro_font.h>
 #include <iostream>
 #include <string>
+#include <memory>
 
 void CreditsState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay) {
     if (initialized) return;
