@@ -2,7 +2,7 @@
 
 #include "State.h"
 #include "GameDisplay.h"
-#include <allegro5\allegro_font.h>
+#include <allegro5/allegro_font.h>
 #include <memory>
 #include "Player1Hand.h"
 #include "Player2Hand.h"

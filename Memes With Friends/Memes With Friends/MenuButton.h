@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Point.h"
-#include <allegro5\allegro.h>
-#include <allegro5\allegro_font.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 #include "GameDisplay.h"
 #include <string>
 #include <memory>

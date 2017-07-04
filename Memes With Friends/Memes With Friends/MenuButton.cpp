@@ -1,7 +1,7 @@
 #include "MenuButton.h"
 #include "Point.h"
 #include <tuple>
-#include <allegro5\allegro.h>
+#include <allegro5/allegro.h>
 #include <string>
 #include <memory>
 #include <allegro5/allegro_font.h>

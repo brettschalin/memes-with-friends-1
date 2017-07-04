@@ -1,6 +1,6 @@
 #include "GameState.h"
 #include "GameDisplay.h"
-#include <allegro5\allegro_font.h>
+#include <allegro5/allegro_font.h>
 #include "main.h"
 #include "CardFactory.h"
 #include "Player1Hand.h"

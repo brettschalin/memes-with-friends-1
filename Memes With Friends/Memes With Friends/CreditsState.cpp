@@ -2,7 +2,7 @@
 #include "State.h"
 #include "main.h"
 #include "MenuButton.h"
-#include <allegro5\allegro_font.h>
+#include <allegro5/allegro_font.h>
 #include <iostream>
 #include <string>
 
