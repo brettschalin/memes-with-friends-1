@@ -37,15 +37,12 @@ std::shared_ptr<Card> CardHand::get_card(size_t index)
 	return cards[index];
 }
 
-void CardHand::remove_card(size_t index)
+void CardHand::remove_card(std::shared_ptr<Card> card)
 {
-	if (index < 0 || index >= cards.size()) return;
-
-	cards.erase(cards.begin()+index);
-
+    cards.erase(std::remove(cards.begin(), cards.end(), card), cards.end());
 }
 
-size_t CardHand::hand_size()
+unsigned int CardHand::hand_size()
 {
 	return cards.size();
 }

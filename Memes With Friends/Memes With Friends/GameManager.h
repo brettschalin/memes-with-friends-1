@@ -15,6 +15,11 @@ enum class PLAYER {
     PLAYER,
 };
 
+enum class STATUS {
+    ILLEGALMOVE,
+    OK,
+};
+
 struct gameData
 {
 	PLAYER current_player;
@@ -32,15 +37,16 @@ private:
     ALLEGRO_COLOR playercolor;
 	gameData data;
     std::shared_ptr<CardFactory> card_factory;
+    void draw_card_from_hand(std::shared_ptr<Card> card);
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);
 	PLAYER get_current_player();
 	void set_current_player(PLAYER player);
-	void play_card(std::shared_ptr<Card> card, int x, int y);
+	STATUS play_card(std::shared_ptr<Card> card, int x, int y);
 	std::shared_ptr<Card> get_card(int x, int y);
-	std::shared_ptr<Card> draw_card_from_hand(int index);
 	bool in_bounds(int x, int y);
 	int get_score(PLAYER player);
     void draw();
+    gameData get_data(); // TEMPORARY
 };

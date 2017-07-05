@@ -24,6 +24,6 @@ public:
 	CardHand &operator=(const CardHand &) = delete;
 	void draw();
 	std::shared_ptr<Card> get_card(size_t index);
-	void remove_card(size_t index);
-	size_t hand_size();
+	void remove_card(std::shared_ptr<Card> card);
+	unsigned int hand_size();
 };

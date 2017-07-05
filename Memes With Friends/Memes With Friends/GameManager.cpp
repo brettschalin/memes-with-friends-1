@@ -37,11 +37,18 @@ void GameManager::set_current_player(PLAYER player)
 	data.current_player = player;
 }
 
-/*Only implements the game logic. Anything with animations or display is left to other functions.
-Assumes that a valid move is played
-*/
-void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
+/* TEMPORARY */
+gameData GameManager::get_data() {
+    return data;
+}
+
+/* Only implements the game logic. Anything with animations or display is left to other functions. */
+STATUS GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 {
+    if (data.board[x][y]) return STATUS::ILLEGALMOVE;
+
+    draw_card_from_hand(card);
+
 	data.board[x][y] = card;
 
 	bool switch_color = false;
@@ -100,6 +107,8 @@ void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 			}
 		}
 	}
+
+    return STATUS::OK;
 }
 
 bool GameManager::in_bounds(int x, int y)
@@ -114,21 +123,16 @@ std::shared_ptr<Card> GameManager::get_card(int x, int y)
 }
 
 //Removes a card from the hand and returns it.
-std::shared_ptr<Card> GameManager::draw_card_from_hand(int index)
+void GameManager::draw_card_from_hand(std::shared_ptr<Card> card)
 {
-	std::shared_ptr<Card> out = NULL;
     switch (data.current_player) {
         case PLAYER::COMPUTER:
-            out = data.computerCards->get_card(index);
-            data.computerCards->remove_card(index);
+            data.computerCards->remove_card(card);
             break;
         case PLAYER::PLAYER:
-            out = data.playerCards->get_card(index);
-            data.playerCards->remove_card(index);
+            data.playerCards->remove_card(card);
             break;
     }
-
-	return out;
 }
 
 
