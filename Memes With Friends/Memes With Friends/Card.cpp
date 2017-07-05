@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <tuple>
 
 #include "Card.h"
 
@@ -30,6 +31,10 @@ Card::Card(std::string meme, std::vector<int> numbers)
 	}
 }
 
+std::tuple<int, int> Card::get_pos() {
+    return std::tuple<int, int>(x1, y1);
+}
+
 bool Card::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     int mouse_x = 0, mouse_y = 0;
     int sx = 0, sy = 0;
@@ -39,12 +44,27 @@ bool Card::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
 
     // left button clicked
-    if (ev.mouse.button == 1) {
+    if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && ev.mouse.button == 1) {
         // check if click was in my bounds
-        return true;
+        if (contains(sx, sy)) return true;
     }
 
     return false;
+}
+
+bool Card::contains(int x, int y) {
+    // if mouseX is >= topleftX and mouseX <= bottomrightX
+    // AND
+    // mouseY is >= topleftY and mouseY <= bottomrightY
+    return (
+               (x >= x1) &&
+               (x <= x2)
+           )
+           &&
+           (
+               (y >= y1) &&
+               (y <= y2)
+           );
 }
 
 void Card::draw()

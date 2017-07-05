@@ -3,6 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <vector>
 #include <memory>
+#include <tuple>
 
 #include "GameDisplay.h"
 
@@ -41,4 +42,6 @@ public:
 	bool compare_to_up(Card &othercard); // compares this card's up value to othercard's down value
 	bool compare_to_down(Card &othercard); // compares this card's down value to othercard's up value
     bool process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
+    bool contains(int x, int y);
+    std::tuple<int, int> get_pos();
 };

@@ -61,6 +61,8 @@ PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         mousey = sy;
     }
 
+    gamemanager->process(ev, gamedisplay);
+
     return PROCESS_CODE::OK;
 }
 

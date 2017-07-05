@@ -121,8 +121,30 @@ void GameManager::flip_color(std::shared_ptr<Card> card) {
 void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     std::shared_ptr<Card> card = data.playerCards->process(ev, gamedisplay);
 
-    if (card) {
-        // card was clicked
+    if (card && card != selected_card) {
+        // a card was clicked that's different than the currently selected card (if any)
+        std::cout << "A new card was clicked" << std::endl;
+
+        // change position on the new card
+        card->set_pos(std::get<0>(card->get_pos()), std::get<1>(card->get_pos()) - 25);
+
+        // if there's a currently selected card, reset it's position
+        if (selected_card) {
+            selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
+            selected_card = NULL;
+        }
+
+        selected_card = card;
+    } else if (card == selected_card) {
+        if (selected_card) {
+            selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
+            selected_card = NULL;
+        }
+    } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && ev.mouse.button == 1) {
+        if (selected_card) {
+            selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
+            selected_card = NULL;
+        }
     }
 }
 

@@ -15,6 +15,6 @@ void ComputerHand::draw()
 {
 	CardHand::draw();
 	al_draw_text(font.get(), al_map_rgb(255, 0, 0),
-		     x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 10,
+		     x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30,
 		     ALLEGRO_ALIGN_LEFT, "Computer");
 }
