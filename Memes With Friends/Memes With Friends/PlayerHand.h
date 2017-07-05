@@ -1,29 +1,15 @@
 #pragma once
 
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <array>
-#include <memory>
 
-#include "Card.h"
 #include "CardFactory.h"
 #include "GameDisplay.h"
+#include "CardHand.h"
 
-class PlayerHand
+class PlayerHand : public CardHand
 {
-protected:
-	std::shared_ptr<ALLEGRO_FONT> font;
-	ALLEGRO_COLOR color;
-	int x;
-	int y;
-	std::vector<std::shared_ptr<Card>> cards;
 public:
-	PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, ALLEGRO_COLOR init_color, int x, int y, CardFactory &card_factory);
-	// This class can't be copied
-	PlayerHand(const PlayerHand &) = delete;
-	PlayerHand &operator=(const PlayerHand &) = delete;
+	PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, CardFactory &card_factory);
 	void draw();
-	std::shared_ptr<Card> get_card(size_t index);
-	void remove_card(size_t index);
-	size_t hand_size();
 };
+
