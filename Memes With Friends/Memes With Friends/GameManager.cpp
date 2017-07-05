@@ -2,68 +2,47 @@
 
 GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay)
 {
+    computercolor = al_map_rgb(255, 0, 0);
+    playercolor = al_map_rgb(0, 0, 255);
 
-	//Set colors. Player 1 is red, Player 2 is blue
-	ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
-	ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
-	data.colors.push_back(red);
-	data.colors.push_back(blue);
-
+    data.playerscore = 0;
+    data.computerscore = 0;
 
 	//Assign who's first to play
+    srand(time(0));
 	int curr_player = (rand() % 2);
-	set_current_player(curr_player);
+    switch (curr_player) {
+        case 0:
+            set_current_player(PLAYER::COMPUTER);
+            break;
+        case 1:
+        default:
+            set_current_player(PLAYER::PLAYER);
+            break;
+    }
 
 	//initialize player hands
     card_factory = std::make_shared<CardFactory>();
     data.computerCards = std::make_shared<ComputerHand>(font, gamedisplay, *card_factory);
     data.playerCards = std::make_shared<PlayerHand>(font, gamedisplay, *card_factory);
-
-	//initialize the board and scorekeeper
-	for (int i = 0; i < BOARDSIZE; i++)
-	{
-		for (int j = 0; j < BOARDSIZE; j++)
-		{
-			data.board[i][j] = NULL;
-			data.scores[i*BOARDSIZE + j] = -1;
-		}
-	}
-
 };
 
-GameManager::~GameManager()
-{
-
-	for (int i = 0; i < BOARDSIZE; i++)
-	{
-		for (int j = 0; j < BOARDSIZE; j++)
-		{
-			data.board[j][i] = NULL;
-		}
-	}
-
-}
-
-int GameManager::get_current_player()
+PLAYER GameManager::get_current_player()
 {
 	return data.current_player;
 }
 
-void GameManager::set_current_player(int player)
+void GameManager::set_current_player(PLAYER player)
 {
 	data.current_player = player;
 }
-
 
 /*Only implements the game logic. Anything with animations or display is left to other functions.
 Assumes that a valid move is played
 */
 void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 {
-	
 	data.board[x][y] = card;
-	data.scores[x*BOARDSIZE + y] = data.current_player;
-	
 
 	bool switch_color = false;
 
@@ -109,16 +88,18 @@ void GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 			}
 			if(switch_color)
 			{
-
-				(*other).set_color(data.colors[data.current_player]);
+                switch (data.current_player) {
+                    case PLAYER::COMPUTER:
+                        (*other).set_color(computercolor);
+                        break;
+                    case PLAYER::PLAYER:
+                        (*other).set_color(playercolor);
+                        break;
+                }
 				switch_color = false;
-				data.scores[(x + dx)*BOARDSIZE + (y + dy)] = data.current_player;
-
 			}
 		}
 	}
-	
-
 }
 
 bool GameManager::in_bounds(int x, int y)
@@ -129,55 +110,41 @@ bool GameManager::in_bounds(int x, int y)
 
 std::shared_ptr<Card> GameManager::get_card(int x, int y)
 {
-
 	return data.board[x][y];
-
 }
 
 //Removes a card from the hand and returns it.
 std::shared_ptr<Card> GameManager::draw_card_from_hand(int index)
 {
-	int curr = data.current_player;
-
 	std::shared_ptr<Card> out = NULL;
-	if (curr == 0)
-	{
-		out = data.computerCards->get_card(index);
-		data.computerCards->remove_card(index);
-	}
-	else
-	{
-		out = data.playerCards->get_card(index);
-		data.playerCards->remove_card(index);
-	}
+    switch (data.current_player) {
+        case PLAYER::COMPUTER:
+            out = data.computerCards->get_card(index);
+            data.computerCards->remove_card(index);
+            break;
+        case PLAYER::PLAYER:
+            out = data.playerCards->get_card(index);
+            data.playerCards->remove_card(index);
+            break;
+    }
 
 	return out;
-
 }
 
 
-int GameManager::get_score(int player)
+int GameManager::get_score(PLAYER player)
 {
+    int score = 0;
 
-	int score;
-	if (player != 0)
-	{
-		score = data.playerCards->hand_size();
-	}
-	else
-	{
-		score = data.computerCards->hand_size();
-	}
+    switch (data.current_player) {
+        case PLAYER::COMPUTER:
+            score = data.computerscore;
+            break;
+        case PLAYER::PLAYER:
+            score = data.playerscore;
+            break;
+    }
 
-	for (int i = 0; i < BOARDSIZE*BOARDSIZE; i++)
-	{
-		if (data.scores[i] == player)
-		{
-			score++;
-		}
-	}
-
-	
 	return score;
 }
 
