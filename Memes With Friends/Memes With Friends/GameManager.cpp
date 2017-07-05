@@ -51,64 +51,71 @@ STATUS GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
 
 	data.board[x][y] = card;
 
-	bool switch_color = false;
+    std::cout << "Playing card (L: " << card->get_left() << ", U: " << card->get_up() << ", R: " << card->get_right() << ", D: " << card->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
 
-	for (int dx = -1; dx < 2; dx++)
-	{
-		for (int dy = -1; dy < 2; dy++)
-		{
-			//don't check out of bounds, or the card itself
-			if (!in_bounds(x + dx, y + dy)) continue;
-			if (dx == 0 && dy == 0) continue;
+    int score = 1;
 
-			std::shared_ptr<Card> other = get_card(x + dx, y + dy);
-			if (other == NULL) continue;
+    std::shared_ptr<Card> up = get_card(x, y - 1);
+    if (up) {
+        if ((*card).compare_to_up(*up)) {
+            std::cout << "Flipping UP card (L: " << up->get_left() << ", U: " << up->get_up() << ", R: " << up->get_right() << ", D: " << up->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
+            score++;
+            flip_color(up);
+        }
+    }
 
-			if (dx == -1 && dy == 0)
-			{
-				if ((*card).compare_to_left(*other))
-				{
-					switch_color = true;
-				}
-			}
-			if (dx == 1 && dy == 0)
-			{
-				if ((*card).compare_to_right(*other))
-				{
-					switch_color = true;
-				}
-			}
-			if (dx == 0 && dy == 1)
-			{
-				if ((*card).compare_to_up(*other))
-				{
-					switch_color = true;
-				}
-			}
+    std::shared_ptr<Card> down = get_card(x, y + 1);
+    if (down) {
+        if ((*card).compare_to_down(*down)) {
+            std::cout << "Flipping DOWN card (L: " << down->get_left() << ", U: " << down->get_up() << ", R: " << down->get_right() << ", D: " << down->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
+            score++;
+            flip_color(down);
+        }
+    }
 
-			if (dx == 0 && dy == -1)
-			{
-				if ((*card).compare_to_down(*other))
-				{
-					switch_color = true;
-				}
-			}
-			if(switch_color)
-			{
-                switch (data.current_player) {
-                    case PLAYER::COMPUTER:
-                        (*other).set_color(computercolor);
-                        break;
-                    case PLAYER::PLAYER:
-                        (*other).set_color(playercolor);
-                        break;
-                }
-				switch_color = false;
-			}
-		}
-	}
+    std::shared_ptr<Card> left = get_card(x - 1, y);
+    if (left) {
+        if ((*card).compare_to_left(*left)) {
+            std::cout << "Flipping LEFT card (L: " << left->get_left() << ", U: " << left->get_up() << ", R: " << left->get_right() << ", D: " << left->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
+            score++;
+            flip_color(left);
+        }
+    }
+
+    std::shared_ptr<Card> right = get_card(x + 1, y);
+    if (right) {
+        if ((*card).compare_to_right(*right)) {
+            std::cout << "Flipping RIGHT card (L: " << right->get_left() << ", U: " << right->get_up() << ", R: " << right->get_right() << ", D: " << right->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
+            score++;
+            flip_color(right);
+        }
+    }
+
+    switch (data.current_player) {
+        case PLAYER::COMPUTER:
+            data.computerscore += score;
+            data.playerscore -= score - 1;
+            break;
+        case PLAYER::PLAYER:
+            data.playerscore += score;
+            data.computerscore -= score - 1;
+            break;
+    }
+
+    std::cout << "C: " << data.computerscore << " | P: " << data.playerscore << std::endl;
 
     return STATUS::OK;
+}
+
+void GameManager::flip_color(std::shared_ptr<Card> card) {
+    switch (data.current_player) {
+        case PLAYER::COMPUTER:
+            (*card).set_color(computercolor);
+            break;
+        case PLAYER::PLAYER:
+            (*card).set_color(playercolor);
+            break;
+    }
 }
 
 bool GameManager::in_bounds(int x, int y)
@@ -119,6 +126,8 @@ bool GameManager::in_bounds(int x, int y)
 
 std::shared_ptr<Card> GameManager::get_card(int x, int y)
 {
+    if (!in_bounds(x, y)) return NULL;
+
 	return data.board[x][y];
 }
 

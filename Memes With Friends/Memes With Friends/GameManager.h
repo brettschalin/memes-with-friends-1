@@ -38,6 +38,7 @@ private:
 	gameData data;
     std::shared_ptr<CardFactory> card_factory;
     void draw_card_from_hand(std::shared_ptr<Card> card);
+    void flip_color(std::shared_ptr<Card> card);
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);

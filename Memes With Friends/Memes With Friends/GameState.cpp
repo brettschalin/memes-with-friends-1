@@ -13,13 +13,20 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
 
     gamemanager = std::make_shared<GameManager>(font, gamedisplay);
     
-    gamemanager->set_current_player(PLAYER::PLAYER);
+    {
+        gamemanager->set_current_player(PLAYER::PLAYER);
+        std::shared_ptr<Card> card = gamemanager->get_data().playerCards->get_card(0);
+        STATUS s = gamemanager->play_card(card, 1, 1);
+    }
 
-    std::shared_ptr<Card> card1 = gamemanager->get_data().playerCards->get_card(0);
-    std::shared_ptr<Card> card2 = gamemanager->get_data().playerCards->get_card(1);
+    {
+        gamemanager->set_current_player(PLAYER::COMPUTER);
+        std::shared_ptr<Card> card = gamemanager->get_data().playerCards->get_card(0);
+        STATUS s = gamemanager->play_card(card, 1, 0);
+    }
 
-    STATUS s = gamemanager->play_card(card1, 0, 0);
-    STATUS p = gamemanager->play_card(card2, 0, 1);
+    int playerscore = gamemanager->get_score(PLAYER::PLAYER);
+    int computerscore = gamemanager->get_score(PLAYER::COMPUTER);
 
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
