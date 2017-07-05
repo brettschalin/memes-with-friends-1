@@ -135,11 +135,6 @@ void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         }
 
         selected_card = card;
-    } else if (card == selected_card) {
-        if (selected_card) {
-            selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
-            selected_card = NULL;
-        }
     } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && ev.mouse.button == 1) {
         if (selected_card) {
             selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
