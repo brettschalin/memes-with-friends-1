@@ -22,6 +22,13 @@ CardHand::CardHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay,
 	}
 }
 
+std::shared_ptr<Card> CardHand::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    for (auto card : cards) {
+        if (card->process(ev, gamedisplay)) return card;
+    }
+    return NULL;
+}
+
 void CardHand::draw()
 {
 	for (auto &c : cards) {

@@ -30,6 +30,23 @@ Card::Card(std::string meme, std::vector<int> numbers)
 	}
 }
 
+bool Card::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    int mouse_x = 0, mouse_y = 0;
+    int sx = 0, sy = 0;
+
+    mouse_x = ev.mouse.x;
+    mouse_y = ev.mouse.y;
+    std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
+
+    // left button clicked
+    if (ev.mouse.button == 1) {
+        // check if click was in my bounds
+        return true;
+    }
+
+    return false;
+}
+
 void Card::draw()
 {
 	if (meme_image == nullptr) return;

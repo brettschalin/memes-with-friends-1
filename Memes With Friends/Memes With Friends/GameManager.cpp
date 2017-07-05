@@ -118,6 +118,14 @@ void GameManager::flip_color(std::shared_ptr<Card> card) {
     }
 }
 
+void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    std::shared_ptr<Card> card = data.playerCards->process(ev, gamedisplay);
+
+    if (card) {
+        // card was clicked
+    }
+}
+
 bool GameManager::in_bounds(int x, int y)
 {
 	return x >= 0 && x < BOARDSIZE && y >= 0 && y < BOARDSIZE;

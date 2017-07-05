@@ -26,4 +26,5 @@ public:
 	std::shared_ptr<Card> get_card(size_t index);
 	void remove_card(std::shared_ptr<Card> card);
 	unsigned int hand_size();
+    std::shared_ptr<Card> process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
 };

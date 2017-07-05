@@ -50,4 +50,5 @@ public:
 	int get_score(PLAYER player);
     void draw();
     gameData get_data(); // TEMPORARY
+    void process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
 };
