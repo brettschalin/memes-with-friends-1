@@ -174,7 +174,7 @@ int GameManager::get_score(PLAYER player)
 {
     int score = 0;
 
-    switch (data.current_player) {
+    switch (player) {
         case PLAYER::COMPUTER:
             score = data.computerscore;
             break;
