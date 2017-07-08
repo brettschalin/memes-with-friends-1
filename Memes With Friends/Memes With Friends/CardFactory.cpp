@@ -70,11 +70,11 @@ void CardFactory::populate_memes(ALLEGRO_FS_ENTRY *dir)
 	al_close_directory(dir);
 }
 
-Card *CardFactory::create_card()
+std::shared_ptr<Card> CardFactory::create_card()
 {
 	std::string meme = choose_meme();
 	std::vector<int> numbers = meme_list[meme];
-	Card *card = new Card(meme, numbers);
+	std::shared_ptr<Card> card = std::make_shared<Card>(Card(meme, numbers));
 	return card;
 }
 

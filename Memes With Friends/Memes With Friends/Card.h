@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "GameDisplay.h"
+#include "enums.h"
 
 class Card
 {
@@ -18,6 +19,7 @@ private:
 	int down;
 	int left;
 	int right;
+	PLAYER owner;
 	ALLEGRO_COLOR CARD_COLOR;
 	ALLEGRO_COLOR border_color;
 	std::shared_ptr<ALLEGRO_BITMAP> meme_image;
@@ -44,4 +46,6 @@ public:
     bool process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
     bool contains(int x, int y);
     std::tuple<int, int> get_pos();
+	void set_owner(PLAYER new_player);
+	PLAYER get_owner();
 };

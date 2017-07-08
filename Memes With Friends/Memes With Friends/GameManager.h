@@ -10,15 +10,13 @@
 #define HANDSIZE 5
 #define NUMBER_OF_PLAYERS 2
 
-enum class PLAYER {
-    COMPUTER,
-    PLAYER,
-};
-
-enum class STATUS {
-    ILLEGALMOVE,
-    OK,
-};
+//board boundaries. Might need changing
+#define BOARD_LEFT 1015
+#define BOARD_RIGHT 1573
+#define BOARD_TOP 96
+#define BOARD_BOTTOM 984
+#define BOARD_W (BOARD_RIGHT - BOARD_LEFT)
+#define BOARD_H (BOARD_BOTTOM - BOARD_TOP)
 
 struct gameData
 {
@@ -52,4 +50,8 @@ public:
     void draw();
     gameData get_data(); // TEMPORARY
     void process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
+
+	void draw_horizontal_line(float y, ALLEGRO_COLOR color);
+	void draw_vertical_line(float x, ALLEGRO_COLOR color);
+
 };
