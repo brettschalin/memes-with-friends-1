@@ -206,7 +206,10 @@ void GameManager::draw() {
 	{
 		for (auto &card : outer)
 		{
-			card->draw();
+			if (card != NULL)
+			{
+				card->draw();
+			}
 		}
 	}
 
