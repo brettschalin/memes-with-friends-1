@@ -23,7 +23,7 @@ public:
 	CardHand(const CardHand &) = delete;
 	CardHand &operator=(const CardHand &) = delete;
 	void draw();
-	std::shared_ptr<Card> get_card(size_t index);
+	std::shared_ptr<Card> get_card(unsigned int index);
 	void remove_card(std::shared_ptr<Card> card);
 	unsigned int hand_size();
     std::shared_ptr<Card> process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay);
