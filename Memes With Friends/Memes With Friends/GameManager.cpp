@@ -6,6 +6,13 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     computercolor = al_map_rgb(255, 0, 0);
     playercolor = al_map_rgb(0, 0, 255);
 
+    std::shared_ptr<ALLEGRO_FONT> turnfont{
+        al_load_ttf_font("pirulen.ttf", 32, 0),
+        &al_destroy_font
+    };
+
+    this->font = turnfont;
+
     data.playerscore = 0;
     data.computerscore = 0;
 
@@ -198,8 +205,25 @@ void GameManager::draw() {
 	data.playerCards->draw();
 	data.computerCards->draw();
 
-	ALLEGRO_COLOR line_color = al_map_rgb(0, 0, 0);
-	
+    ALLEGRO_COLOR turncolor;
+    std::string turntext;
+
+    switch (data.current_player) {
+        case PLAYER::COMPUTER:
+            turntext = "Computer's Turn";
+            turncolor = al_map_rgb(255, 0, 0);
+            break;
+        case PLAYER::PLAYER:
+        default:
+            turntext = "Player's Turn";
+            turncolor = al_map_rgb(0, 0, 255);
+            break;
+    }
+
+    al_draw_text(font.get(), turncolor, BOARD_LEFT + (BOARD_W / 2), BOARD_TOP - 50, ALLEGRO_ALIGN_CENTER, turntext.c_str());
+
+    ALLEGRO_COLOR line_color = al_map_rgb(0, 0, 0);
+
 	//draw the board
 	for (int i = 0; i <= BOARDSIZE; i++)
 	{

@@ -47,6 +47,7 @@ private:
     void flip_color(std::shared_ptr<Card> card);
     std::shared_ptr<Card> selected_card;
     gridHoverData hoverdata;
+    std::shared_ptr<ALLEGRO_FONT> font;
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);
