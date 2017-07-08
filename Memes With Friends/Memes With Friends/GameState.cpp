@@ -28,6 +28,7 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
 
     int playerscore = gamemanager->get_score(PLAYER::PLAYER);
     int computerscore = gamemanager->get_score(PLAYER::COMPUTER);
+    std::cout << (gamemanager->get_current_player() == PLAYER::PLAYER ? "Player" : "Computer") << std::endl;
 
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);

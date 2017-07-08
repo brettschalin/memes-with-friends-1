@@ -126,6 +126,8 @@ void GameManager::flip_color(std::shared_ptr<Card> card) {
 }
 
 void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    if (get_current_player() == PLAYER::COMPUTER) return;
+
     std::shared_ptr<Card> card = data.playerCards->process(ev, gamedisplay);
 
     if (card && card != selected_card) {
@@ -175,7 +177,6 @@ void GameManager::draw_card_from_hand(std::shared_ptr<Card> card)
             break;
     }
 }
-
 
 int GameManager::get_score(PLAYER player)
 {
