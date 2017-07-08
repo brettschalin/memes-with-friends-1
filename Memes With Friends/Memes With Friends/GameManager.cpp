@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "Point.h"
 
 GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay)
 {
@@ -50,6 +51,12 @@ STATUS GameManager::play_card(std::shared_ptr<Card> card, int x, int y)
     draw_card_from_hand(card);
 
 	data.board[x][y] = card;
+
+    int newx = BOARD_LEFT + (BOARD_SLOTSIZE_W * x);
+    int newy = BOARD_TOP + (BOARD_SLOTSIZE_H * y);
+
+    card->set_pos(newx + (Card::CARD_BORDER_WIDTH*2), newy + 5 + (Card::CARD_BORDER_WIDTH*2));
+    card->set_played(true);
 
     std::cout << "Playing card (L: " << card->get_left() << ", U: " << card->get_up() << ", R: " << card->get_right() << ", D: " << card->get_down() << ") on (" << x << ", " << y << ")" << std::endl;
 
@@ -198,20 +205,24 @@ void GameManager::draw() {
 		draw_horizontal_line(BOARD_TOP + (i * 1.0 / BOARDSIZE)*BOARD_H, line_color);
 		draw_vertical_line(BOARD_LEFT + (i * 1.0 / BOARDSIZE)*BOARD_W, line_color);
 	}
-	
 
-	//and the cards
-	for (auto &outer : data.board)
-	{
-		for (auto &card : outer)
-		{
-			if (card != NULL)
-			{
-				card->draw();
-			}
-		}
-	}
+    //and the cards
+    for (auto &outer : data.board) {
+        for (auto &card : outer) {
+            if (card != NULL) {
+                card->draw();
+            }
+        }
+    }
 
+    if (hoverdata.shouldhighlight) {
+        int offsetx = BOARD_LEFT + (BOARD_SLOTSIZE_W * hoverdata.gridx);
+        int offsety = BOARD_TOP + (BOARD_SLOTSIZE_H * hoverdata.gridy);
+        Point highlight_topleft{offsetx + 5, offsety + 10};
+        Point highlight_bottomright{offsetx + 5 + Card::CARD_W + (Card::CARD_BORDER_WIDTH * 2), offsety + 10 + Card::CARD_H + (Card::CARD_BORDER_WIDTH * 2)};
+        ALLEGRO_COLOR highlight_color = al_map_rgba(0, 0, 0, 80); // 0, 0, 0, 20
+        al_draw_filled_rectangle(std::get<0>(highlight_topleft.get_point()), std::get<1>(highlight_topleft.get_point()), std::get<0>(highlight_bottomright.get_point()), std::get<1>(highlight_bottomright.get_point()), highlight_color);
+    }
 }
 
 void GameManager::draw_horizontal_line(float y, ALLEGRO_COLOR color)
@@ -224,3 +235,8 @@ void GameManager::draw_vertical_line(float x, ALLEGRO_COLOR color)
 	al_draw_line(x, BOARD_TOP, x, BOARD_BOTTOM, color, 2);
 }
 
+bool GameManager::grid_occupied(int x, int y) {
+    if (data.board[x][y] != NULL) return true;
+
+    return false;
+}

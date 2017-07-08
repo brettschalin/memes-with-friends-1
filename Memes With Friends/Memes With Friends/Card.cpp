@@ -36,6 +36,8 @@ std::tuple<int, int> Card::get_pos() {
 }
 
 bool Card::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    if (played) return false;
+
     int mouse_x = 0, mouse_y = 0;
     int sx = 0, sy = 0;
 
@@ -206,4 +208,12 @@ void Card::set_owner(PLAYER new_player)
 PLAYER Card::get_owner()
 {
 	return owner;
+}
+
+void Card::set_played(bool played) {
+    this->played = played;
+}
+
+bool Card::get_played() {
+    return played;
 }
