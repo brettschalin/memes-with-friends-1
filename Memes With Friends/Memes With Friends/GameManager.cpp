@@ -132,9 +132,69 @@ void GameManager::flip_color(std::shared_ptr<Card> card) {
     }
 }
 
+bool GameManager::gridcontains(int x, int y, Point topleft, Point bottomright) {
+    // if mouseX is >= topleftX and mouseX <= bottomrightX
+    // AND
+    // mouseY is >= topleftY and mouseY <= bottomrightY
+    return (
+               (x >= std::get<0>(topleft.get_point())) &&
+               (x <= std::get<0>(bottomright.get_point()))
+           )
+           &&
+           (
+               (y >= std::get<1>(topleft.get_point())) &&
+               (y <= std::get<1>(bottomright.get_point()))
+           );
+}
+
+std::tuple<int, int> GameManager::gridslotat(int x, int y) {
+    for (int r = 0; r < BOARDSIZE; r++) {
+        for (int c = 0; c < BOARDSIZE; c++) {
+            int offsetx = BOARD_LEFT + (BOARD_SLOTSIZE_W * c);
+            int offsety = BOARD_TOP + (BOARD_SLOTSIZE_H * r);
+            Point topleft{offsetx + 5, offsety + 10};
+            Point bottomright{offsetx + 5 + Card::CARD_W + (Card::CARD_BORDER_WIDTH * 2), offsety + 10 + Card::CARD_H + (Card::CARD_BORDER_WIDTH * 2)};
+            if (gridcontains(x, y, topleft, bottomright)) {
+                return std::make_tuple(c, r);
+            }
+        }
+    }
+
+    return std::make_tuple(-1, -1);
+}
+
 void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     if (get_current_player() == PLAYER::COMPUTER) return;
 
+    // a card is selected so let's test if the grid is being hovered over
+    if (selected_card) {
+        int mouse_x = 0, mouse_y = 0;
+        int sx = 0, sy = 0;
+
+        ALLEGRO_MOUSE_STATE state;
+        al_get_mouse_state(&state);
+        mouse_x = state.x;
+        mouse_y = state.y;
+
+        std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
+
+        int gridx = 0, gridy = 0;
+        std::tie(gridx, gridy) = gridslotat(sx, sy);
+
+        if (gridx != -1) {
+            if (!grid_occupied(gridx, gridy)) {
+                hoverdata.gridx = gridx;
+                hoverdata.gridy = gridy;
+                hoverdata.shouldhighlight = true;
+            } else {
+                hoverdata.shouldhighlight = false;
+            }
+        } else {
+            hoverdata.shouldhighlight = false;
+        }
+    }
+
+    // check if a card is being clicked from the player's hands
     std::shared_ptr<Card> card = data.playerCards->process(ev, gamedisplay);
 
     if (card && card != selected_card) {
@@ -148,6 +208,7 @@ void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         if (selected_card) {
             selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
             selected_card = NULL;
+            hoverdata.shouldhighlight = false;
         }
 
         selected_card = card;
@@ -155,6 +216,7 @@ void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         if (selected_card) {
             selected_card->set_pos(std::get<0>(selected_card->get_pos()), std::get<1>(selected_card->get_pos()) + 25);
             selected_card = NULL;
+            hoverdata.shouldhighlight = false;
         }
     }
 }
@@ -245,7 +307,7 @@ void GameManager::draw() {
         int offsety = BOARD_TOP + (BOARD_SLOTSIZE_H * hoverdata.gridy);
         Point highlight_topleft{offsetx + 5, offsety + 10};
         Point highlight_bottomright{offsetx + 5 + Card::CARD_W + (Card::CARD_BORDER_WIDTH * 2), offsety + 10 + Card::CARD_H + (Card::CARD_BORDER_WIDTH * 2)};
-        ALLEGRO_COLOR highlight_color = al_map_rgba(0, 0, 0, 80); // 0, 0, 0, 20
+        ALLEGRO_COLOR highlight_color = al_map_rgba(0, 0, 0, 20); // 0, 0, 0, 20
         al_draw_filled_rectangle(std::get<0>(highlight_topleft.get_point()), std::get<1>(highlight_topleft.get_point()), std::get<0>(highlight_bottomright.get_point()), std::get<1>(highlight_bottomright.get_point()), highlight_color);
     }
 }

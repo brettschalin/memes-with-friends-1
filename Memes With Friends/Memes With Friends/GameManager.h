@@ -5,6 +5,7 @@
 #include "CardFactory.h"
 #include "ComputerHand.h"
 #include "PlayerHand.h"
+#include "Point.h"
 
 #define BOARDSIZE 3
 #define HANDSIZE 5
@@ -63,5 +64,6 @@ public:
     bool grid_occupied(int x, int y);
 	void draw_horizontal_line(float y, ALLEGRO_COLOR color);
 	void draw_vertical_line(float x, ALLEGRO_COLOR color);
-
+    std::tuple<int, int> gridslotat(int x, int y);
+    bool gridcontains(int x, int y, Point topleft, Point bottomright);
 };
