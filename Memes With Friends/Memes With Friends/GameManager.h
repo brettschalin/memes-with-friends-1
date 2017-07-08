@@ -18,16 +18,6 @@
 #define BOARD_W BOARD_RIGHT - BOARD_LEFT
 #define BOARD_H BOARD_BOTTOM - BOARD_TOP
 
-enum class PLAYER {
-    COMPUTER,
-    PLAYER,
-};
-
-enum class STATUS {
-    ILLEGALMOVE,
-    OK,
-};
-
 struct gameData
 {
 	PLAYER current_player;

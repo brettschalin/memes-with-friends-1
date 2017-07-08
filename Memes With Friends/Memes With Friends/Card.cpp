@@ -197,3 +197,13 @@ bool Card::compare_to_down(Card &othercard)
 {
 	return down > othercard.get_up();
 }
+
+void Card::set_owner(PLAYER new_player)
+{
+	owner = new_player;
+}
+
+PLAYER Card::get_owner()
+{
+	return owner;
+}

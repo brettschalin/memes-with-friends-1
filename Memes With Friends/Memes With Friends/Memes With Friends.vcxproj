@@ -167,6 +167,7 @@
     <ClInclude Include="GameDisplay.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="ComputerHand.h" />
