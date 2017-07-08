@@ -284,6 +284,13 @@ void GameManager::draw() {
 
     al_draw_text(font.get(), turncolor, BOARD_LEFT + (BOARD_W / 2), BOARD_TOP - 50, ALLEGRO_ALIGN_CENTER, turntext.c_str());
 
+    std::string scoretext = "Player: ";
+    scoretext.append(std::to_string(data.playerscore));
+    scoretext.append(" | Computer: ");
+    scoretext.append(std::to_string(data.computerscore));
+
+    al_draw_text(font.get(), al_map_rgb(0, 0, 0), BOARD_LEFT + (BOARD_W / 2), BOARD_BOTTOM + 25, ALLEGRO_ALIGN_CENTER, scoretext.c_str());
+
     ALLEGRO_COLOR line_color = al_map_rgb(0, 0, 0);
 
 	//draw the board

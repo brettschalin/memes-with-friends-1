@@ -21,7 +21,7 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
 
     {
         gamemanager->set_current_player(PLAYER::COMPUTER);
-        std::shared_ptr<Card> card = gamemanager->get_data().playerCards->get_card(0);
+        std::shared_ptr<Card> card = gamemanager->get_data().computerCards->get_card(0);
         STATUS s = gamemanager->play_card(card, 1, 0);
     }
 

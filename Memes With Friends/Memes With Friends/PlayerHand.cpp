@@ -5,6 +5,7 @@
 #include "CardFactory.h"
 #include "GameDisplay.h"
 #include "PlayerHand.h"
+#include "GameManager.h"
 
 PlayerHand::PlayerHand(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay, CardFactory &card_factory)
 	:CardHand::CardHand(font, gamedisplay, al_map_rgb(0, 0, 255), 50, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 50, card_factory)
@@ -17,4 +18,5 @@ void PlayerHand::draw()
 	al_draw_text(font.get(), al_map_rgb(0, 0, 255),
 		     x, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105,
 		     ALLEGRO_ALIGN_LEFT, "Player");
+    al_draw_line(x, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105, BOARD_LEFT - 20, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105, al_map_rgb(0, 0, 255), 1);
 }
