@@ -11,12 +11,12 @@
 #define NUMBER_OF_PLAYERS 2
 
 //board boundaries. Might need changing
-#define BOARD_LEFT 980
-#define BOARD_RIGHT 1538
+#define BOARD_LEFT 1015
+#define BOARD_RIGHT 1573
 #define BOARD_TOP 96
 #define BOARD_BOTTOM 984
-#define BOARD_W BOARD_RIGHT - BOARD_LEFT
-#define BOARD_H BOARD_BOTTOM - BOARD_TOP
+#define BOARD_W (BOARD_RIGHT - BOARD_LEFT)
+#define BOARD_H (BOARD_BOTTOM - BOARD_TOP)
 
 struct gameData
 {

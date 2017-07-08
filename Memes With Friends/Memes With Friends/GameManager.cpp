@@ -195,9 +195,8 @@ void GameManager::draw() {
 	//draw the board
 	for (int i = 0; i <= BOARDSIZE; i++)
 	{
-		
-		draw_horizontal_line(BOARD_TOP + (float)(i / BOARDSIZE)*BOARD_H, line_color);
-		draw_vertical_line(BOARD_LEFT + (float)(i / BOARDSIZE)*BOARD_W, line_color);
+		draw_horizontal_line(BOARD_TOP + (i * 1.0 / BOARDSIZE)*BOARD_H, line_color);
+		draw_vertical_line(BOARD_LEFT + (i * 1.0 / BOARDSIZE)*BOARD_W, line_color);
 	}
 	
 
@@ -217,53 +216,11 @@ void GameManager::draw() {
 
 void GameManager::draw_horizontal_line(float y, ALLEGRO_COLOR color)
 {
-/*
-	ALLEGRO_VERTEX left = { BOARD_LEFT,
-		y,
-		0,
-		0,
-		0,
-		al_map_rgb(0,0,0)
-	};
-
-	ALLEGRO_VERTEX right = { BOARD_RIGHT,
-		y,
-		0,
-		0,
-		0,
-		al_map_rgb(0,0,0)
-	};
-
-	ALLEGRO_VERTEX points[] = { left,right };
-	al_draw_prim(points, NULL, 0, 0, 1, ALLEGRO_PRIM_LINE_LIST);
-*/
-	al_draw_line(BOARD_LEFT, y, BOARD_RIGHT, y, color, 2);
-	
-	}
+	al_draw_line(BOARD_LEFT, y, BOARD_RIGHT, y, color, 2);	
+}
 
 void GameManager::draw_vertical_line(float x, ALLEGRO_COLOR color)
 {
-/*
-	ALLEGRO_VERTEX top = {x,
-		BOARD_TOP,
-		0,
-		0,
-		0,
-		al_map_rgb(0,0,0)
-	};
-
-	ALLEGRO_VERTEX bottom = {x,
-		BOARD_BOTTOM,
-		0,
-		0,
-		0,
-		al_map_rgb(0,0,0) 
-	};
-
-	ALLEGRO_VERTEX points[] = { top, bottom};
-	al_draw_prim(points, NULL, 0, 0, 1, ALLEGRO_PRIM_LINE_LIST);
-*/
 	al_draw_line(x, BOARD_TOP, x, BOARD_BOTTOM, color, 2);
-	
-	}
+}
 
