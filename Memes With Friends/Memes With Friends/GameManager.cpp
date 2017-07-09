@@ -3,6 +3,8 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include "MenuButton.h"
+#include "main.h"
 
 GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay)
 {
@@ -15,6 +17,22 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     };
 
     this->font = turnfont;
+
+    std::shared_ptr<ALLEGRO_FONT> bfont{
+        al_load_ttf_font("pirulen.ttf", 48, 0),
+        &al_destroy_font
+    };
+
+    this->buttonfont = bfont;
+
+    std::shared_ptr<ALLEGRO_FONT> gfont{
+        al_load_ttf_font("pirulen.ttf", 96, 0),
+        &al_destroy_font
+    };
+
+    this->gameoverfont = gfont;
+
+    this->gamedisplay = gamedisplay;
 
     gameover = false;
 
@@ -30,6 +48,11 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     data.playerCards = std::make_shared<PlayerHand>(font, gamedisplay, *card_factory);
 
     for (auto &card : data.playerCards->get_cards()) card->set_owner(PLAYER::PLAYER);
+
+    newgame = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 250, 400, 100);
+    newgame->set_text("New Game");
+    newgame->set_visible(false);
+    newgame->set_enabled(false);
 
     //Assign who's first to play
     srand(time(0));
@@ -374,6 +397,7 @@ EXITLOOP:
     if (availableslots.size() == 0) {
         std::cout << "GAME OVER!" << std::endl;
         gameover = true;
+        newgame->set_enabled(true);
 
         return;
     }
@@ -382,20 +406,36 @@ EXITLOOP:
 }
 
 void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
+    int mouse_x = 0, mouse_y = 0;
+    int sx = 0, sy = 0;
+
+    ALLEGRO_MOUSE_STATE state;
+    al_get_mouse_state(&state);
+    mouse_x = state.x;
+    mouse_y = state.y;
+
+    std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
+    Point mouse(sx, sy);
+
+    if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+        switch (ev.mouse.button) {
+            case 1:
+                // left button
+                if (newgame->is_enabled() && newgame->contains(mouse)) {
+                    std::cout << "NEW GAME CLICKED" << std::endl;
+                    switchstate(GAMESTATE::GAMESTATE);
+                }
+                break;
+        }
+    } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+        newgame->mouseover(mouse);
+    }
+
     if (get_current_player() == PLAYER::COMPUTER) return;
+    if (get_gameover()) return;
 
     // a card is selected so let's test if the grid is being hovered over
     if (selected_card) {
-        int mouse_x = 0, mouse_y = 0;
-        int sx = 0, sy = 0;
-
-        ALLEGRO_MOUSE_STATE state;
-        al_get_mouse_state(&state);
-        mouse_x = state.x;
-        mouse_y = state.y;
-
-        std::tie(sx, sy) = gamedisplay->convert_coordinates(mouse_x, mouse_y);
-
         int gridx = 0, gridy = 0;
         std::tie(gridx, gridy) = gridslotat(sx, sy);
 
@@ -546,8 +586,34 @@ void GameManager::draw() {
     }
 
     if (gameover) {
-        al_draw_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 601, (GameDisplay::SCREEN_H / 2) + 401, al_map_rgb(0, 0, 0), 5);
-        al_draw_filled_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 600, (GameDisplay::SCREEN_H / 2) + 400, al_map_rgb(211, 211, 211));
+        ALLEGRO_COLOR panelcolor = gamedisplay->get_background_color();
+        al_draw_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 601, (GameDisplay::SCREEN_H / 2) + 401, al_map_rgb(0, 0, 0), 10);
+        al_draw_filled_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 600, (GameDisplay::SCREEN_H / 2) + 400, panelcolor);
+        
+        al_draw_text(gameoverfont.get(), al_map_rgb(0, 0, 0), GameDisplay::SCREEN_W / 2, (GameDisplay::SCREEN_H / 2) - 300, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+
+        std::string gameovertext;
+        ALLEGRO_COLOR gameovercolor;
+
+        if (data.playerscore == data.computerscore) {
+            // draw
+            // not sure if this is actually possible but including it just in case
+            gameovertext = "Draw";
+            gameovercolor = al_map_rgb(0, 0, 0);
+        } else if (data.playerscore < data.computerscore) {
+            // lost, computer won
+            gameovertext = "Computer Won";
+            gameovercolor = al_map_rgb(255, 0, 0);
+        } else {
+            // won, computer lost
+            gameovertext = "Player Won";
+            gameovercolor = al_map_rgb(0, 0, 255);
+        }
+
+        al_draw_text(gameoverfont.get(), gameovercolor, GameDisplay::SCREEN_W / 2, GameDisplay::SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, gameovertext.c_str());
+
+        newgame->set_visible(true);
+        newgame->draw(buttonfont, gamedisplay);
     }
 }
 

@@ -6,6 +6,7 @@
 #include "ComputerHand.h"
 #include "PlayerHand.h"
 #include "Point.h"
+#include "MenuButton.h"
 
 #define BOARDSIZE 3
 #define HANDSIZE 5
@@ -49,7 +50,11 @@ private:
     std::shared_ptr<Card> selected_card;
     gridHoverData hoverdata;
     std::shared_ptr<ALLEGRO_FONT> font;
+    std::shared_ptr<ALLEGRO_FONT> buttonfont;
+    std::shared_ptr<ALLEGRO_FONT> gameoverfont;
+    GameDisplay *gamedisplay;
     bool gameover;
+    std::shared_ptr<MenuButton> newgame;
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);

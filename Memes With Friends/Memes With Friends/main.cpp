@@ -56,7 +56,7 @@ int switchstate(GAMESTATE newstate) {
         case GAMESTATE::MENUSTATE:
         {
             if (gamestate == GAMESTATE::CREDITSSTATE) statemachine.pop();
-            if (gamestate == GAMESTATE::GAMESTATE) statemachine.pop();
+            else if (gamestate == GAMESTATE::GAMESTATE) statemachine.pop();
             else {
                 auto ms = std::make_shared<MenuState>();
                 ms->enter(font, g_gamedisplay);
@@ -67,6 +67,12 @@ int switchstate(GAMESTATE newstate) {
         case GAMESTATE::GAMESTATE:
         {
             if (gamestate == GAMESTATE::PAUSESTATE) statemachine.pop();
+            else if (gamestate == GAMESTATE::GAMESTATE) {
+                statemachine.pop();
+                auto gs = std::make_shared<GameState>();
+                gs->enter(font, g_gamedisplay);
+                statemachine.push(gs);
+            }
             else {
                 auto gs = std::make_shared<GameState>();
                 gs->enter(font, g_gamedisplay);
