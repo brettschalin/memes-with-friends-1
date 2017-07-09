@@ -181,6 +181,49 @@ void GameManager::aiturn() {
 
     bool canplay = false;
 
+    // difficulty
+    // set threshold higher (max 100) to make it more difficult
+    unsigned int threshold = 75;
+
+    if (threshold > 100) threshold = 100;
+
+    std::random_device rd;
+    std::uniform_int_distribution<int> distribution(1, 100);
+    std::mt19937 engine(rd()); // Mersenne twister MT19937
+
+    unsigned int value = distribution(engine);
+    if (value < threshold) {
+
+        std::cout << "EASY MODE" << std::endl;
+
+        // if the random number is below the difficulty threshold, pick a random card and play a random available grid slot.
+        std::vector<std::tuple<int, int>> availableslots;
+        for (int r = 0; r < BOARDSIZE; r++) {
+            for (int c = 0; c < BOARDSIZE; c++) {
+                if (!grid_occupied(c, r)) {
+                    availableslots.push_back(std::tuple<int, int>(c, r));
+                }
+            }
+        }
+
+        if (availableslots.size() == 0) goto EXITLOOP;
+
+        srand(time(0));
+        auto randomslot = availableslots[rand() % availableslots.size()];
+
+        srand(time(0));
+        auto randomcard = data.computerCards->get_cards()[rand() % data.computerCards->get_cards().size()];
+
+        move = randomslot;
+        computer_card = randomcard;
+
+        canplay = true;
+
+        goto EXITLOOP;
+    }
+
+    std::cout << "HARD MODE" << std::endl;
+
     // Algorithm is pretty simple
     // Credits go to /u/the1spaceman for thinking this up
     // and to me /u/CSTutor for implementation
@@ -306,7 +349,8 @@ EXITLOOP:
         play_card(computer_card, std::get<0>(move), std::get<1>(move));
     } else {
         // no good move was found so play the fallback
-        play_card(data.computerCards->get_card(0), std::get<0>(fallback), std::get<1>(fallback));
+        srand(time(0));
+        play_card(data.computerCards->get_cards()[rand() % data.computerCards->get_cards().size()], std::get<0>(fallback), std::get<1>(fallback));
     }
 
     set_current_player(PLAYER::PLAYER);
