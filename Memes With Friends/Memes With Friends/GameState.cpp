@@ -12,23 +12,6 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
     this->font = font;
 
     gamemanager = std::make_shared<GameManager>(font, gamedisplay);
-    
-    /*
-    {
-        gamemanager->set_current_player(PLAYER::PLAYER);
-        std::shared_ptr<Card> card = gamemanager->get_data().playerCards->get_card(0);
-        STATUS s = gamemanager->play_card(card, 1, 1);
-    }
-
-    {
-        gamemanager->set_current_player(PLAYER::COMPUTER);
-        std::shared_ptr<Card> card = gamemanager->get_data().playerCards->get_card(0);
-        STATUS s = gamemanager->play_card(card, 1, 0);
-    }
-
-    int playerscore = gamemanager->get_score(PLAYER::PLAYER);
-    int computerscore = gamemanager->get_score(PLAYER::COMPUTER);
-    */
 
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
@@ -53,7 +36,12 @@ PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
                 break;
             case ALLEGRO_KEY_ESCAPE:
                 // return to menustate
-                switchstate(GAMESTATE::PAUSESTATE);
+                if (!gamemanager->get_gameover()) switchstate(GAMESTATE::PAUSESTATE);
+                else {
+                    // exit game to prepare for new one
+                    switchstate(GAMESTATE::MENUSTATE);
+                    return PROCESS_CODE::OK;
+                }
                 break;
         }
     } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {

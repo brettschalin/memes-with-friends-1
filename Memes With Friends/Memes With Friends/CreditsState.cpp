@@ -15,10 +15,7 @@ void CreditsState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     credits.append("/u/the1spaceman\n");
     credits.append("/u/EliteTK\n\n");
     credits.append("Memes:\n\n");
-    credits.append("/u/xgfdgfbdbgcxnhgc\n");
-    credits.append("TBD\n");
-    credits.append("TBD\n");
-    credits.append("TBD\n\n");
+    credits.append("/u/xgfdgfbdbgcxnhgc\n\n");
     credits.append("Testing:\n\n");
     credits.append("/u/Killa-Byte\n");
 

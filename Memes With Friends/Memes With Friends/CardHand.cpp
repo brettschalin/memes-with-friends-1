@@ -37,9 +37,9 @@ void CardHand::draw()
 	}
 }
 
-std::shared_ptr<Card> CardHand::get_card(size_t index)
+std::shared_ptr<Card> CardHand::get_card(unsigned int index)
 {
-	if (index < 0 || index >= cards.size()) return NULL;
+	if (index >= cards.size()) return NULL;
 
 	return cards[index];
 }
@@ -54,3 +54,6 @@ unsigned int CardHand::hand_size()
 	return cards.size();
 }
 
+std::vector<std::shared_ptr<Card>> CardHand::get_cards() {
+    return cards;
+}
