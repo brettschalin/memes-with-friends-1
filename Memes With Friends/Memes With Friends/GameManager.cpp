@@ -1,5 +1,8 @@
 #include "GameManager.h"
 #include "Point.h"
+#include <thread>
+#include <chrono>
+#include <future>
 
 GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay)
 {
@@ -51,7 +54,10 @@ void GameManager::set_current_player(PLAYER player)
 {
 	data.current_player = player;
     
-    if (player == PLAYER::COMPUTER) aiturn();
+    if (player == PLAYER::COMPUTER) {
+        std::thread t(&GameManager::aiturn, this);
+        t.detach();
+    }
 }
 
 /* TEMPORARY */
@@ -176,6 +182,11 @@ std::tuple<int, int> GameManager::gridslotat(int x, int y) {
 
 // computer AI
 void GameManager::aiturn() {
+
+    // random delay between 1 and 4 seconds
+    srand(time(0));
+    int delay = (rand() % 4) + 1;
+    std::this_thread::sleep_for(std::chrono::seconds(delay));
 
     std::tuple<int, int> move;
     std::tuple<int, int> fallback;
