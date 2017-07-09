@@ -49,6 +49,7 @@ private:
     std::shared_ptr<Card> selected_card;
     gridHoverData hoverdata;
     std::shared_ptr<ALLEGRO_FONT> font;
+    bool gameover;
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);
@@ -67,4 +68,5 @@ public:
     std::tuple<int, int> gridslotat(int x, int y);
     bool gridcontains(int x, int y, Point topleft, Point bottomright);
     void aiturn();
+    bool get_gameover();
 };

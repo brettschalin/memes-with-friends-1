@@ -13,6 +13,8 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
 
     this->font = turnfont;
 
+    gameover = false;
+
     data.playerscore = 0;
     data.computerscore = 0;
 
@@ -337,20 +339,32 @@ void GameManager::aiturn() {
 
 EXITLOOP:
 
-    // game is over, no available slots
-    if (!canplay) {
-        std::cout << "GAME OVER!" << std::endl;
-
-        return;
+    if (canplay) {
+        // if move contains a valid coordinate, play the given card with the given move
+        if (std::get<0>(move) >= 0) {
+            play_card(computer_card, std::get<0>(move), std::get<1>(move));
+        } else {
+            // no good move was found so play the fallback
+            srand(time(0));
+            play_card(data.computerCards->get_cards()[rand() % data.computerCards->get_cards().size()], std::get<0>(fallback), std::get<1>(fallback));
+        }
     }
 
-    // if move contains a valid coordinate, play the given card with the given move
-    if (std::get<0>(move) >= 0) {
-        play_card(computer_card, std::get<0>(move), std::get<1>(move));
-    } else {
-        // no good move was found so play the fallback
-        srand(time(0));
-        play_card(data.computerCards->get_cards()[rand() % data.computerCards->get_cards().size()], std::get<0>(fallback), std::get<1>(fallback));
+    std::vector<std::tuple<int, int>> availableslots;
+    for (int r = 0; r < BOARDSIZE; r++) {
+        for (int c = 0; c < BOARDSIZE; c++) {
+            if (!grid_occupied(c, r)) {
+                availableslots.push_back(std::tuple<int, int>(c, r));
+            }
+        }
+    }
+
+    // game is over, no available slots
+    if (availableslots.size() == 0) {
+        std::cout << "GAME OVER!" << std::endl;
+        gameover = true;
+
+        return;
     }
 
     set_current_player(PLAYER::PLAYER);
@@ -484,7 +498,7 @@ void GameManager::draw() {
             break;
     }
 
-    al_draw_text(font.get(), turncolor, BOARD_LEFT + (BOARD_W / 2), BOARD_TOP - 50, ALLEGRO_ALIGN_CENTER, turntext.c_str());
+    if (!gameover) al_draw_text(font.get(), turncolor, BOARD_LEFT + (BOARD_W / 2), BOARD_TOP - 50, ALLEGRO_ALIGN_CENTER, turntext.c_str());
 
     std::string scoretext = "Player: ";
     scoretext.append(std::to_string(data.playerscore));
@@ -519,6 +533,15 @@ void GameManager::draw() {
         ALLEGRO_COLOR highlight_color = al_map_rgba(0, 0, 0, 20); // 0, 0, 0, 20
         al_draw_filled_rectangle(std::get<0>(highlight_topleft.get_point()), std::get<1>(highlight_topleft.get_point()), std::get<0>(highlight_bottomright.get_point()), std::get<1>(highlight_bottomright.get_point()), highlight_color);
     }
+
+    if (gameover) {
+        al_draw_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 601, (GameDisplay::SCREEN_H / 2) + 401, al_map_rgb(0, 0, 0), 5);
+        al_draw_filled_rectangle((GameDisplay::SCREEN_W / 2) - 600, (GameDisplay::SCREEN_H / 2) - 400, (GameDisplay::SCREEN_W / 2) + 600, (GameDisplay::SCREEN_H / 2) + 400, al_map_rgb(211, 211, 211));
+    }
+}
+
+bool GameManager::get_gameover() {
+    return gameover;
 }
 
 void GameManager::draw_horizontal_line(float y, ALLEGRO_COLOR color)
