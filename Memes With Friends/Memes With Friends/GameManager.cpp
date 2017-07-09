@@ -16,9 +16,19 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
     data.playerscore = 0;
     data.computerscore = 0;
 
-	//Assign who's first to play
+	//initialize player hands
+    card_factory = std::make_shared<CardFactory>();
+    data.computerCards = std::make_shared<ComputerHand>(font, gamedisplay, *card_factory);
+    
+    for (auto &card : data.computerCards->get_cards()) card->set_owner(PLAYER::COMPUTER);
+
+    data.playerCards = std::make_shared<PlayerHand>(font, gamedisplay, *card_factory);
+
+    for (auto &card : data.playerCards->get_cards()) card->set_owner(PLAYER::PLAYER);
+
+    //Assign who's first to play
     srand(time(0));
-	int curr_player = (rand() % 2);
+    int curr_player = (rand() % 2);
     switch (curr_player) {
         case 0:
             set_current_player(PLAYER::COMPUTER);
@@ -28,11 +38,6 @@ GameManager::GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedi
             set_current_player(PLAYER::PLAYER);
             break;
     }
-
-	//initialize player hands
-    card_factory = std::make_shared<CardFactory>();
-    data.computerCards = std::make_shared<ComputerHand>(font, gamedisplay, *card_factory);
-    data.playerCards = std::make_shared<PlayerHand>(font, gamedisplay, *card_factory);
 };
 
 PLAYER GameManager::get_current_player()
@@ -43,6 +48,8 @@ PLAYER GameManager::get_current_player()
 void GameManager::set_current_player(PLAYER player)
 {
 	data.current_player = player;
+    
+    if (player == PLAYER::COMPUTER) aiturn();
 }
 
 /* TEMPORARY */
@@ -125,9 +132,11 @@ void GameManager::flip_color(std::shared_ptr<Card> card) {
     switch (data.current_player) {
         case PLAYER::COMPUTER:
             (*card).set_color(computercolor);
+            (*card).set_owner(PLAYER::PLAYER);
             break;
         case PLAYER::PLAYER:
             (*card).set_color(playercolor);
+            (*card).set_owner(PLAYER::COMPUTER);
             break;
     }
 }
@@ -161,6 +170,146 @@ std::tuple<int, int> GameManager::gridslotat(int x, int y) {
     }
 
     return std::make_tuple(-1, -1);
+}
+
+// computer AI
+void GameManager::aiturn() {
+
+    std::tuple<int, int> move;
+    std::tuple<int, int> fallback;
+    std::shared_ptr<Card> computer_card;
+
+    bool canplay = false;
+
+    // Algorithm is pretty simple
+    // Credits go to /u/the1spaceman for thinking this up
+    // and to me /u/CSTutor for implementation
+    //
+    // 1. Loop through every card slot on the board skipping occupied slots
+    // 2. Check up/down/left/right within bounds for cards owned by the player
+    // 3. If one is found:
+    //    3a. Loop through all remaining Computer cards
+    //    3b. If one can flip the card, play it
+    //    3c. If not, save the grid location for later
+    // 4. If not, save the grid location for later
+    // 5. Play the saved grid location as a fallback
+
+    for (int r = 0; r < BOARDSIZE; r++) {
+        for (int c = 0; c < BOARDSIZE; c++) {
+            if (!grid_occupied(c, r)) {
+                canplay = true;
+
+                int x = c;
+                int y = r;
+
+                std::cout << "Evaluating (" << x << ", " << y << ")" << std::endl;
+
+                std::shared_ptr<Card> up = get_card(x, y - 1);
+                if (up && up->get_owner() == PLAYER::PLAYER) {
+                    for (auto &card : data.computerCards->get_cards()) {
+                        if (card->compare_to_up(*up)) {
+                            std::cout << "Going to flip UP" << std::endl;
+                            computer_card = card;
+                            move = std::tuple<int, int>(x, y);
+                            goto EXITLOOP;
+                        } else {
+                            std::cout << "Marking FALLBACK 1 UP" << std::endl;
+                            fallback = std::tuple<int, int>(x, y);
+                            move = std::tuple<int, int>(-1, -1);
+                        }
+                    }
+                } else {
+                    std::cout << "Marking FALLBACK 2 UP" << std::endl;
+                    fallback = std::tuple<int, int>(x, y);
+                    move = std::tuple<int, int>(-1, -1);
+                }
+
+                std::shared_ptr<Card> down = get_card(x, y + 1);
+                std::cout << "Looking at DOWN card (" << x << ", " << y + 1 << ")" << std::endl;
+                if (!down) std::cout << "DOWN card is nonexistent" << std::endl;
+                else {
+                    if (down->get_owner() != PLAYER::PLAYER) std::cout << "DOWN card not owned by player" << std::endl;
+                }
+                if (down && down->get_owner() == PLAYER::PLAYER) {
+                    for (auto &card : data.computerCards->get_cards()) {
+                        if (card->compare_to_down(*down)) {
+                            std::cout << "Going to flip DOWN" << std::endl;
+                            computer_card = card;
+                            move = std::tuple<int, int>(x, y);
+                            goto EXITLOOP;
+                        } else {
+                            std::cout << "Marking FALLBACK 1 DOWN" << std::endl;
+                            fallback = std::tuple<int, int>(x, y);
+                            move = std::tuple<int, int>(-1, -1);
+                        }
+                    }
+                } else {
+                    std::cout << "Marking FALLBACK 2 DOWN" << std::endl;
+                    fallback = std::tuple<int, int>(x, y);
+                    move = std::tuple<int, int>(-1, -1);
+                }
+
+                std::shared_ptr<Card> left = get_card(x - 1, y);
+                if (left && left->get_owner() == PLAYER::PLAYER) {
+                    for (auto &card : data.computerCards->get_cards()) {
+                        if (card->compare_to_left(*left)) {
+                            std::cout << "Going to flip LEFT" << std::endl;
+                            computer_card = card;
+                            move = std::tuple<int, int>(x, y);
+                            goto EXITLOOP;
+                        } else {
+                            std::cout << "Marking FALLBACK 1 LEFT" << std::endl;
+                            fallback = std::tuple<int, int>(x, y);
+                            move = std::tuple<int, int>(-1, -1);
+                        }
+                    }
+                } else {
+                    std::cout << "Marking FALLBACK 2 LEFT" << std::endl;
+                    fallback = std::tuple<int, int>(x, y);
+                    move = std::tuple<int, int>(-1, -1);
+                }
+
+                std::shared_ptr<Card> right = get_card(x + 1, y);
+                if (right && right->get_owner() == PLAYER::PLAYER) {
+                    for (auto &card : data.computerCards->get_cards()) {
+                        if (card->compare_to_right(*right)) {
+                            std::cout << "Going to flip RIGHT" << std::endl;
+                            computer_card = card;
+                            move = std::tuple<int, int>(x, y);
+                            goto EXITLOOP;
+                        } else {
+                            std::cout << "Marking FALLBACK 1 RIGHT" << std::endl;
+                            fallback = std::tuple<int, int>(x, y);
+                            move = std::tuple<int, int>(-1, -1);
+                        }
+                    }
+                } else {
+                    std::cout << "Marking FALLBACK 2 RIGHT" << std::endl;
+                    fallback = std::tuple<int, int>(x, y);
+                    move = std::tuple<int, int>(-1, -1);
+                }
+            }
+        }
+    }
+
+EXITLOOP:
+
+    // game is over, no available slots
+    if (!canplay) {
+        std::cout << "GAME OVER!" << std::endl;
+
+        return;
+    }
+
+    // if move contains a valid coordinate, play the given card with the given move
+    if (std::get<0>(move) >= 0) {
+        play_card(computer_card, std::get<0>(move), std::get<1>(move));
+    } else {
+        // no good move was found so play the fallback
+        play_card(data.computerCards->get_card(0), std::get<0>(fallback), std::get<1>(fallback));
+    }
+
+    set_current_player(PLAYER::PLAYER);
 }
 
 void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {

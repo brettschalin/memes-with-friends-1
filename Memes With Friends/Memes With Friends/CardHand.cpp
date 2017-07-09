@@ -54,3 +54,6 @@ unsigned int CardHand::hand_size()
 	return cards.size();
 }
 
+std::vector<std::shared_ptr<Card>> CardHand::get_cards() {
+    return cards;
+}

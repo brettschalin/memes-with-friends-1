@@ -66,4 +66,5 @@ public:
 	void draw_vertical_line(float x, ALLEGRO_COLOR color);
     std::tuple<int, int> gridslotat(int x, int y);
     bool gridcontains(int x, int y, Point topleft, Point bottomright);
+    void aiturn();
 };
