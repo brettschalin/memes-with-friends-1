@@ -55,6 +55,8 @@ private:
     GameDisplay *gamedisplay;
     bool gameover;
     std::shared_ptr<MenuButton> newgame;
+    DIFFICULTY difficulty;
+    std::string debugoutput;
 
 public:
 	GameManager(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedisplay);
@@ -74,4 +76,6 @@ public:
     bool gridcontains(int x, int y, Point topleft, Point bottomright);
     void aiturn();
     bool get_gameover();
+    void set_difficulty(DIFFICULTY difficulty);
+    std::string get_debugoutput();
 };

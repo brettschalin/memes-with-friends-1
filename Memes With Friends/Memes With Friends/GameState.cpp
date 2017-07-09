@@ -21,6 +21,15 @@ void GameState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
     initialized = true;
 }
 
+void GameState::set_difficulty(DIFFICULTY difficulty) {
+    this->difficulty = difficulty;
+    gamemanager->set_difficulty(difficulty);
+}
+
+DIFFICULTY GameState::get_difficulty() {
+    return this->difficulty;
+}
+
 PROCESS_CODE GameState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     int mouse_x = 0, mouse_y = 0;
     int sx = 0, sy = 0;
@@ -60,8 +69,9 @@ void GameState::draw(GameDisplay *gamedisplay) {
 
     if (debug) {
         // if debug is toggled on, draw debug information above everything else
-        std::string mouse_pos = "Mouse: (" + std::to_string(mousex) + ", " + std::to_string(mousey) + ")";
-        al_draw_multiline_text(this->font.get(), al_map_rgb(0, 0, 0), 10, 10, GameDisplay::SCREEN_W - 10, 0, ALLEGRO_ALIGN_LEFT, mouse_pos.c_str());
+        std::string mouse_pos = "Mouse: (" + std::to_string(mousex) + ", " + std::to_string(mousey) + ")\n";
+        std::string debugtxt = mouse_pos + gamemanager->get_debugoutput();
+        al_draw_multiline_text(this->font.get(), al_map_rgb(0, 0, 0), 10, 10, GameDisplay::SCREEN_W - 10, 0, ALLEGRO_ALIGN_LEFT, debugtxt.c_str());
     }
 
     // draw help text

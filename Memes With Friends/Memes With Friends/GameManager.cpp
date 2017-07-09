@@ -73,6 +73,10 @@ PLAYER GameManager::get_current_player()
 	return data.current_player;
 }
 
+void GameManager::set_difficulty(DIFFICULTY difficulty) {
+    this->difficulty = difficulty;
+}
+
 void GameManager::set_current_player(PLAYER player)
 {
 	data.current_player = player;
@@ -203,6 +207,10 @@ std::tuple<int, int> GameManager::gridslotat(int x, int y) {
     return std::make_tuple(-1, -1);
 }
 
+std::string GameManager::get_debugoutput() {
+    return debugoutput;
+}
+
 // computer AI
 void GameManager::aiturn() {
 
@@ -219,17 +227,43 @@ void GameManager::aiturn() {
 
     // difficulty
     // set threshold higher (max 100) to make it more difficult
-    unsigned int threshold = 75;
+    unsigned int threshold = 0;
 
-    if (threshold > 100) threshold = 100;
+    switch (difficulty) {
+        case DIFFICULTY::VERYEASY:
+            threshold = 0;
+            debugoutput = "AI Threshold 0 (Very Easy) ";
+            break;
+        case DIFFICULTY::EASY:
+            threshold = 25;
+            debugoutput = "AI Threshold 25 (Easy) ";
+            break;
+        case DIFFICULTY::MEDIUM:
+            threshold = 50;
+            debugoutput = "AI Threshold 50 (Medium) ";
+            break;
+        case DIFFICULTY::HARD:
+            threshold = 75;
+            debugoutput = "AI Threshold 75 (Hard) ";
+            break;
+        case DIFFICULTY::VERYHARD:
+            threshold = 100;
+            debugoutput = "AI Threshold 100 (Very Hard) ";
+            break;
+    }
 
     std::random_device rd;
     std::uniform_int_distribution<int> distribution(1, 100);
     std::mt19937 engine(rd()); // Mersenne twister MT19937
 
     unsigned int value = distribution(engine);
-    if (value < threshold) {
+    if (value > threshold) {
 
+        debugoutput.append(" | Value (");
+        debugoutput.append(std::to_string(value));
+        debugoutput.append(") > Threshold (");
+        debugoutput.append(std::to_string(threshold));
+        debugoutput.append(") | Using Easy Algorithm");
         std::cout << "EASY MODE" << std::endl;
 
         // if the random number is below the difficulty threshold, pick a random card and play a random available grid slot.
@@ -257,6 +291,12 @@ void GameManager::aiturn() {
 
         goto EXITLOOP;
     }
+
+    debugoutput.append(" | Value (");
+    debugoutput.append(std::to_string(value));
+    debugoutput.append(") < Threshold (");
+    debugoutput.append(std::to_string(threshold));
+    debugoutput.append(") | Using Hard Algorithm");
 
     std::cout << "HARD MODE" << std::endl;
 
