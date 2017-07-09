@@ -18,5 +18,5 @@ void PlayerHand::draw()
 	al_draw_text(font.get(), al_map_rgb(0, 0, 255),
 		     x, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105,
 		     ALLEGRO_ALIGN_LEFT, "Player");
-    al_draw_line(x, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105, BOARD_LEFT - 20, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105, al_map_rgb(0, 0, 255), 1);
+    al_draw_line(x, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105 - 5, BOARD_LEFT - 20, GameDisplay::SCREEN_H - (Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H) - 105 - 5, al_map_rgb(0, 0, 255), 3);
 }

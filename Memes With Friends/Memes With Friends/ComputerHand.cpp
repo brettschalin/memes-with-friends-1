@@ -19,5 +19,5 @@ void ComputerHand::draw()
 		     x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30,
 		     ALLEGRO_ALIGN_LEFT, "Computer");
 
-    al_draw_line(x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30 + 14, BOARD_LEFT - 20, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30 + 14, al_map_rgb(255, 0, 0), 1);
+    al_draw_line(x, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30 + 18, BOARD_LEFT - 20, y + Card::CARD_BORDER_WIDTH * 2 + Card::CARD_H + 30 + 18, al_map_rgb(255, 0, 0), 3);
 }
