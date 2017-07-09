@@ -181,6 +181,15 @@ void GameManager::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
         int gridx = 0, gridy = 0;
         std::tie(gridx, gridy) = gridslotat(sx, sy);
 
+        if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && ev.mouse.button == 1 && gridx != -1 && !grid_occupied(gridx, gridy)) {
+            std::cout << "PLAY CARD ON (" << gridx << ", " << gridy << ")" << std::endl;
+            play_card(selected_card, gridx, gridy);
+            hoverdata.shouldhighlight = false;
+            selected_card = NULL;
+            set_current_player(PLAYER::COMPUTER);
+            return;
+        }
+
         if (gridx != -1) {
             if (!grid_occupied(gridx, gridy)) {
                 hoverdata.gridx = gridx;
