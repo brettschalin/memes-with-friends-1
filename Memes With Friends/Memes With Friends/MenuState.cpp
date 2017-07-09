@@ -3,6 +3,7 @@
 #include "MenuButton.h"
 #include "Point.h"
 #include "main.h"
+#include "enums.h"
 #include <iostream>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
@@ -16,7 +17,9 @@ void MenuState::enter(std::shared_ptr<ALLEGRO_FONT> font, GameDisplay *gamedispl
     creditsbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) - 50, 400, 100);
     creditsbutton->set_text("Credits");
 
-    quitbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 100, 400, 100);
+    difficultytoggle = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 100, 400, 100);
+
+    quitbutton = std::make_shared<MenuButton>((GameDisplay::SCREEN_W / 2) - 200, (GameDisplay::SCREEN_H / 2) + 250, 400, 100);
     quitbutton->set_text("Quit");
 
     set_pause(false);
@@ -45,6 +48,25 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
                 } else if (creditsbutton->is_enabled() && creditsbutton->contains(mouse)) {
                     std::cout << "Credits clicked" << std::endl;
                     switchstate(GAMESTATE::CREDITSSTATE);
+                } else if (difficultytoggle->is_enabled() && difficultytoggle->contains(mouse)) {
+                    std::cout << "Difficulty Toggle clicked" << std::endl;
+                    switch (difficulty) {
+                        case DIFFICULTY::VERYEASY:
+                            change_difficulty(DIFFICULTY::EASY);
+                            break;
+                        case DIFFICULTY::EASY:
+                            change_difficulty(DIFFICULTY::MEDIUM);
+                            break;
+                        case DIFFICULTY::MEDIUM:
+                            change_difficulty(DIFFICULTY::HARD);
+                            break;
+                        case DIFFICULTY::HARD:
+                            change_difficulty(DIFFICULTY::VERYHARD);
+                            break;
+                        case DIFFICULTY::VERYHARD:
+                            change_difficulty(DIFFICULTY::VERYEASY);
+                            break;
+                    }
                 } else if (quitbutton->is_enabled() && quitbutton->contains(mouse)) {
                     std::cout << "Quit clicked" << std::endl;
                     return PROCESS_CODE::QUIT;
@@ -54,16 +76,44 @@ PROCESS_CODE MenuState::process(ALLEGRO_EVENT ev, GameDisplay *gamedisplay) {
     } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
         playbutton->mouseover(mouse);
         creditsbutton->mouseover(mouse);
+        difficultytoggle->mouseover(mouse);
         quitbutton->mouseover(mouse);
     }
 
     return PROCESS_CODE::OK;
 }
 
+DIFFICULTY MenuState::get_difficulty() {
+    return difficulty;
+}
+
+void MenuState::change_difficulty(DIFFICULTY newdifficulty) {
+    difficulty = newdifficulty;
+
+    switch (difficulty) {
+        case DIFFICULTY::VERYEASY:
+            difficultytoggle->set_text("Very Easy");
+            break;
+        case DIFFICULTY::EASY:
+            difficultytoggle->set_text("Easy");
+            break;
+        case DIFFICULTY::MEDIUM:
+            difficultytoggle->set_text("Medium");
+            break;
+        case DIFFICULTY::HARD:
+            difficultytoggle->set_text("Hard");
+            break;
+        case DIFFICULTY::VERYHARD:
+            difficultytoggle->set_text("Very Hard");
+            break;
+    }
+}
+
 void MenuState::draw(GameDisplay *gamedisplay) {
     al_draw_text(font.get(), al_map_rgb(0, 0, 0), GameDisplay::SCREEN_W / 2, playbutton->get_y1() - 100, ALLEGRO_ALIGN_CENTER, "MEMES WITH FRIENDS");
     playbutton->draw(this->font, gamedisplay);
     creditsbutton->draw(this->font, gamedisplay);
+    difficultytoggle->draw(this->font, gamedisplay);
     quitbutton->draw(this->font, gamedisplay);
 }
 

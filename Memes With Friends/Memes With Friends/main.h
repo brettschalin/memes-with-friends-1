@@ -2,13 +2,7 @@
 
 #include <memory>
 #include <string>
-
-enum class GAMESTATE {
-    MENUSTATE,
-    PAUSESTATE,
-    CREDITSSTATE,
-    GAMESTATE,
-};
+#include "enums.h"
 
 int switchstate(GAMESTATE newstate);
 int main(void);

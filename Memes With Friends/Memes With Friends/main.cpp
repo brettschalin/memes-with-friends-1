@@ -56,27 +56,45 @@ int switchstate(GAMESTATE newstate) {
         case GAMESTATE::MENUSTATE:
         {
             if (gamestate == GAMESTATE::CREDITSSTATE) statemachine.pop();
+            else if (gamestate == GAMESTATE::GAMESTATE) statemachine.pop();
             else {
                 auto ms = std::make_shared<MenuState>();
                 ms->enter(font, g_gamedisplay);
+                ms->change_difficulty(DIFFICULTY::MEDIUM);
                 statemachine.push(ms);
             }
         }
             break;
         case GAMESTATE::GAMESTATE:
         {
-            if (gamestate == GAMESTATE::PAUSESTATE) statemachine.pop();
-            else {
+            if (gamestate == GAMESTATE::PAUSESTATE) {
+                DIFFICULTY difficulty = ((MenuState *)statemachine.top().get())->get_difficulty();
+                statemachine.pop();
+                ((GameState *)statemachine.top().get())->set_difficulty(difficulty);
+            }
+            else if (gamestate == GAMESTATE::GAMESTATE) {
+                DIFFICULTY difficulty = ((GameState *)statemachine.top().get())->get_difficulty();
+                statemachine.pop();
                 auto gs = std::make_shared<GameState>();
                 gs->enter(font, g_gamedisplay);
+                gs->set_difficulty(difficulty);
+                statemachine.push(gs);
+            }
+            else {
+                DIFFICULTY difficulty = ((MenuState *)statemachine.top().get())->get_difficulty();
+                auto gs = std::make_shared<GameState>();
+                gs->enter(font, g_gamedisplay);
+                gs->set_difficulty(difficulty);
                 statemachine.push(gs);
             }
         }
             break;
         case GAMESTATE::PAUSESTATE:
         {
+            DIFFICULTY difficulty = ((GameState *)statemachine.top().get())->get_difficulty();
             auto ps = std::make_shared<MenuState>();
             ps->enter(font, g_gamedisplay);
+            ps->change_difficulty(difficulty);
             ((MenuState *)ps.get())->set_pause(true);
             statemachine.push(ps);
         }

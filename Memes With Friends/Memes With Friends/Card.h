@@ -25,6 +25,7 @@ private:
 	std::shared_ptr<ALLEGRO_BITMAP> meme_image;
 	std::shared_ptr<ALLEGRO_FONT> font;
 	GameDisplay *gamedisplay;
+    bool played = false;
 public:
 	const static int CARD_W = 166;
 	const static int CARD_H = 266;
@@ -48,4 +49,6 @@ public:
     std::tuple<int, int> get_pos();
 	void set_owner(PLAYER new_player);
 	PLAYER get_owner();
+    void set_played(bool played);
+    bool get_played();
 };
